@@ -12,8 +12,8 @@ builder.Services.AddGlobalExceptionHandling();
 builder.Services.AddDbContext<ECommerceDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add repositories and services (will be added later)
-// builder.Services.AddScoped<IProductService, ProductService>();
+// Add ECommerce services (repositories, Unit of Work, business services)
+builder.Services.AddECommerceServices();
 
 var app = builder.Build();
 
