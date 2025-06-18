@@ -1605,7 +1605,10 @@
         },
         "runtime": {
           "bin/placeholder/ECommerce.Shared.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },

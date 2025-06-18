@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using ECommerce.Shared.Data;
+using ECommerce.Shared.Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddGlobalExceptionHandling();
 
 // Add Entity Framework
 builder.Services.AddDbContext<ECommerceDbContext>(options =>
@@ -15,14 +17,15 @@ builder.Services.AddDbContext<ECommerceDbContext>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+// // Configure the HTTP request pipeline.
+// if (!app.Environment.IsDevelopment())
+// {
+//     app.UseExceptionHandler("/Home/Error");
+//     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+//     app.UseHsts();
+// }
 
+app.UseGlobalExceptionHandling();
 app.UseHttpsRedirection();
 app.UseRouting();
 
