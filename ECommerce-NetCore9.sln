@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Data", "ECommerce
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Models", "ECommerce.Models\ECommerce.Models.csproj", "{E4F407D2-C07D-4E55-9D1B-E90395B97A34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Shared", "ECommerce.Shared\ECommerce.Shared.csproj", "{89ED1BAF-161F-4A09-9826-E870FF6FC59D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{E4F407D2-C07D-4E55-9D1B-E90395B97A34}.Release|x64.Build.0 = Release|Any CPU
 		{E4F407D2-C07D-4E55-9D1B-E90395B97A34}.Release|x86.ActiveCfg = Release|Any CPU
 		{E4F407D2-C07D-4E55-9D1B-E90395B97A34}.Release|x86.Build.0 = Release|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Debug|x64.Build.0 = Debug|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Debug|x86.Build.0 = Debug|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Release|x64.ActiveCfg = Release|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Release|x64.Build.0 = Release|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Release|x86.ActiveCfg = Release|Any CPU
+		{89ED1BAF-161F-4A09-9826-E870FF6FC59D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
