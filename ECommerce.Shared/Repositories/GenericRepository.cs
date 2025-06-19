@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using ECommerce.Shared.Common.Exceptions;
 using ECommerce.Shared.Data;
+using ECommerce.Shared.DTOs.Common;
 using ECommerce.Shared.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,8 +46,8 @@ namespace ECommerce.Shared.Repositories
         }
 
         public virtual async Task<IEnumerable<T>> Get(
-            Expression<Func<T, bool>> filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             string includeProperties = ""
         )
         {
@@ -91,6 +92,74 @@ namespace ECommerce.Shared.Repositories
 
             _dbSet.Update(entity);
             return await Task.FromResult(entity);
+        }
+
+        public virtual async Task<IEnumerable<T>> GetPaginatedAsync(PagedRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            IQueryable<T> query = _dbSet;
+
+            // Apply search filter if provided
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                query = ApplySearchFilter(query, request.SearchTerm);
+            }
+
+            // Apply sorting
+            if (!string.IsNullOrWhiteSpace(request.SortBy))
+            {
+                query = ApplySorting(query, request.SortBy, request.SortDescending);
+            }
+
+            // Apply pagination
+            var result = await query
+                .Skip((request.ValidPageNumber - 1) * request.ValidPageSize)
+                .Take(request.ValidPageSize)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public virtual async Task<int> GetCountAsync(string? searchTerm = null)
+        {
+            IQueryable<T> query = _dbSet;
+
+            // Apply search filter if provided
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = ApplySearchFilter(query, searchTerm);
+            }
+
+            return await query.CountAsync();
+        }
+
+        /// <summary>
+        /// Virtual method to apply search filtering. Override in derived classes for entity-specific search logic.
+        /// </summary>
+        /// <param name="query">The base query</param>
+        /// <param name="searchTerm">The search term</param>
+        /// <returns>Filtered query</returns>
+        protected virtual IQueryable<T> ApplySearchFilter(IQueryable<T> query, string searchTerm)
+        {
+            // Default implementation - no filtering
+            // Override in specific repositories (e.g., ProductRepository) to implement search logic
+            return query;
+        }
+
+        /// <summary>
+        /// Virtual method to apply sorting. Override in derived classes for entity-specific sort logic.
+        /// </summary>
+        /// <param name="query">The base query</param>
+        /// <param name="sortBy">The field to sort by</param>
+        /// <param name="sortDescending">Sort direction</param>
+        /// <returns>Sorted query</returns>
+        protected virtual IQueryable<T> ApplySorting(IQueryable<T> query, string sortBy, bool sortDescending)
+        {
+            // Default implementation - sort by first property
+            // Override in specific repositories for proper sorting
+            return query;
         }
     }
 }

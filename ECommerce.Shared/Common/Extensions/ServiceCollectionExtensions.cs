@@ -1,5 +1,8 @@
 using ECommerce.Shared.IRepositories;
+using ECommerce.Shared.IServices;
+using ECommerce.Shared.Mappings;
 using ECommerce.Shared.Repositories;
+using ECommerce.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ECommerce.Shared.Common.Extensions
@@ -15,13 +18,14 @@ namespace ECommerce.Shared.Common.Extensions
         {
             // Register Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+
             // Register individual repositories (optional - since they're accessible via UnitOfWork)
             services.AddScoped<IProductRepository, ProductRepository>();
-            
+            services.AddScoped<IProductService, ProductService>();
+
             return services;
         }
-        
+
         /// <summary>
         /// Add business services to the service collection
         /// </summary>
@@ -32,10 +36,10 @@ namespace ECommerce.Shared.Common.Extensions
             // Register business logic services here when you create them
             // services.AddScoped<IProductService, ProductService>();
             // services.AddScoped<IOrderService, OrderService>();
-            
+
             return services;
         }
-        
+
         /// <summary>
         /// Add all ECommerce services (repositories + business services)
         /// </summary>
@@ -45,7 +49,20 @@ namespace ECommerce.Shared.Common.Extensions
         {
             services.AddRepositories();
             services.AddBusinessServices();
-            
+            services.AddAutoMapperProfiles();
+            return services;
+        }
+
+        /// <summary>
+        /// Add AutoMapper configurations
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddAutoMapperProfiles(this IServiceCollection services)
+        {
+            // Đăng ký tất cả profiles trong assembly
+            services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
+
             return services;
         }
     }
