@@ -18,7 +18,7 @@
             <th>OldPrice</th>
             <th>Category</th>
             <th>SubCategory</th>
-            <th>Supplier</th>
+            <th>CompanyName</th>
             <th>Discount</th>
             <th>UnitInStock</th>
             <th>UnitOnOrder</th>
@@ -47,7 +47,7 @@
                         @(item.SubCategoryName ?? "")
                     </td>
                     <td>
-                        @(item.SupplierName ?? "")
+                        @(item.CompanyName ?? "")
                     </td>
                     <td>
                         @item.Discount
@@ -79,7 +79,8 @@
         {
             <tr>
                 <td colspan="11" class="text-center">No products found</td>
-            </tr>        }
+            </tr>        
+        }
     </table>
 </div>
 
@@ -88,7 +89,8 @@
 {
     <nav aria-label="Product pagination">
         <ul class="pagination justify-content-center">
-            <!-- Previous Page -->            @if (Model.HasPreviousPage)
+            <!-- Previous Page -->            
+            @if (Model.HasPreviousPage)
             {
                 <li class="page-item">
                     <a class="page-link" href="@Url.Action("Index", new { 

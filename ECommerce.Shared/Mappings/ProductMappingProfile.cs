@@ -9,6 +9,8 @@ namespace ECommerce.Shared.Mappings
         public ProductMappingProfile()
         {
             CreateMap<Product, ProductResponseDto>()
+                .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Supplier.CompanyName))
+                .ForMember(dest => dest.SupplierId, opt => opt.MapFrom(src => src.SupplierID))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Category.CategoryID));
 

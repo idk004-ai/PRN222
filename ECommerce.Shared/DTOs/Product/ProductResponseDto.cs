@@ -28,6 +28,6 @@ namespace ECommerce.Shared.DTOs.Product
         
         // Supplier info
         public int? SupplierId { get; set; }
-        public string? SupplierName { get; set; }
+        public string? CompanyName { get; set; }
     }
 }
