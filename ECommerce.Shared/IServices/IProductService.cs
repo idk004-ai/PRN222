@@ -19,9 +19,29 @@ namespace ECommerce.Shared.IServices
         /// <returns>Product details</returns>
         Task<ProductResponseDto?> GetProductByIdAsync(int id);
         
-        // Các methods khác bạn tự implement sau
-        // Task<ProductResponseDto> CreateProductAsync(CreateProductDto request);
-        // Task<ProductResponseDto> UpdateProductAsync(int id, UpdateProductDto request);
-        // Task<bool> DeleteProductAsync(int id);
+        /// <summary>
+        /// Create new product
+        /// </summary>
+        /// <param name="request">Create product request</param>
+        /// <returns>Created product details</returns>
+        Task<ProductResponseDto> CreateProductAsync(CreateProductDto request);
+        
+        /// <summary>
+        /// Get categories for dropdown
+        /// </summary>
+        /// <returns>List of categories</returns>
+        Task<IEnumerable<object>> GetCategoriesForDropdownAsync();
+        
+        /// <summary>
+        /// Get subcategories for dropdown
+        /// </summary>
+        /// <returns>List of subcategories</returns>
+        Task<IEnumerable<object>> GetSubCategoriesForDropdownAsync();
+        
+        /// <summary>
+        /// Get suppliers for dropdown
+        /// </summary>
+        /// <returns>List of suppliers</returns>
+        Task<IEnumerable<object>> GetSuppliersForDropdownAsync();
     }
 }

@@ -4,5 +4,7 @@ namespace ECommerce.Shared.Common.Constants
     {
         public readonly static string PRODUCT_NOT_FOUND = "Product not found";
         public readonly static string PRODUCT_ALREADY_EXISTS = "Product already exists";
+
+        public readonly static string PRODUCT_CREATED_SUCCESSFULLY = "Product created successfully!";
     }
 }

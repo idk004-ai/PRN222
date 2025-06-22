@@ -9,9 +9,15 @@ namespace ECommerce.Shared.Repositories
         private readonly ECommerceDbContext _context;
         private IDbContextTransaction? _transaction;
         private IProductRepository? _productRepository;
+        private ICategoryRepository? _categoryRepository;
+        private ISubCategoryRepository? _subCategoryRepository;
+        private ISupplierRepository? _supplierRepository;
         private bool _disposed = false;
 
         public IProductRepository ProductRepository => _productRepository ??= new ProductRepository(_context);
+        public ICategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_context);
+        public ISubCategoryRepository SubCategoryRepository => _subCategoryRepository ??= new SubCategoryRepository(_context);
+        public ISupplierRepository SupplierRepository => _supplierRepository ??= new SupplierRepository(_context);
 
         public UnitOfWork(ECommerceDbContext context)
         {
