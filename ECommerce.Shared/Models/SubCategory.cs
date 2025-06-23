@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Shared.Models
 {
-    [Table("SubCategories")]
+    [Table("SubCategory")]
     public class SubCategory
     {
         public SubCategory()
