@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace ECommerce.Shared.DTOs.Product
 {
-    public class CreateProductDto
+    public class UpdateProductDto
     {
+        public int ProductID { get; set; }
+
         [Required(ErrorMessage = "Product name is required")]
         [StringLength(255, ErrorMessage = "Product name cannot exceed 255 characters")]
         public string Name { get; set; } = string.Empty;
@@ -21,7 +23,7 @@ namespace ECommerce.Shared.DTOs.Product
         public string? QuantityPerUnit { get; set; }
 
         [Required(ErrorMessage = "Unit price is required")]
-        [Range(0.1, double.MaxValue, ErrorMessage = "Unit price must be greater than 0")]
+        [Range(0, double.MaxValue, ErrorMessage = "Unit price must be greater than 0")]
         public decimal UnitPrice { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Old price must be greater than 0")]
@@ -38,6 +40,7 @@ namespace ECommerce.Shared.DTOs.Product
 
         [Range(0, int.MaxValue, ErrorMessage = "Stock must be greater than or equal to 0")]
         public int? UnitInStock { get; set; }
+
         [Range(0, int.MaxValue, ErrorMessage = "Unit on order must be greater than or equal to 0")]
         public int? UnitOnOrder { get; set; }
 
@@ -50,6 +53,7 @@ namespace ECommerce.Shared.DTOs.Product
 
         [StringLength(50)]
         public string? OfferBadgeClass { get; set; }
+
         [StringLength(1000)]
         public string? ShortDescription { get; set; }
         
