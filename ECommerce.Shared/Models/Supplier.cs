@@ -1,52 +1,31 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class Supplier
 {
-    [Table("Suppliers")]
-    public class Supplier
-    {
-        public Supplier()
-        {
-            Products = new HashSet<Product>();
-        }
+    public int SupplierId { get; set; }
 
-        [Key]
-        public int SupplierID { get; set; }
+    public string CompanyName { get; set; } = null!;
 
-        [Required]
-        [StringLength(255)]
-        public string CompanyName { get; set; } = string.Empty;
+    public string? ContactName { get; set; }
 
-        [StringLength(100)]
-        public string? ContactName { get; set; }
+    public string? ContactTitle { get; set; }
 
-        [StringLength(100)]
-        public string? ContactTitle { get; set; }
+    public string? Address { get; set; }
 
-        [StringLength(500)]
-        public string? Address { get; set; }
+    public string? Mobile { get; set; }
 
-        [StringLength(20)]
-        public string? Mobile { get; set; }
+    public string Phone { get; set; } = null!;
 
-        [StringLength(20)]
-        public string? Phone { get; set; }
+    public string? Fax { get; set; }
 
-        [StringLength(20)]
-        public string? Fax { get; set; }
+    public string Email { get; set; } = null!;
 
-        [StringLength(255)]
-        [EmailAddress]
-        public string? Email { get; set; }
+    public string? City { get; set; }
 
-        [StringLength(100)]
-        public string? City { get; set; }
+    public string? Country { get; set; }
 
-        [StringLength(100)]
-        public string? Country { get; set; }
-
-        // Navigation properties
-        public virtual ICollection<Product> Products { get; set; }
-    }
+    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

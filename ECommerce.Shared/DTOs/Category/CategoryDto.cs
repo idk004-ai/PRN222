@@ -7,9 +7,7 @@ namespace ECommerce.Shared.DTOs.Category
         public string? Description { get; set; }
         public string? Picture1 { get; set; }
         public string? Picture2 { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public bool? IsActive { get; set; }
         
         // Navigation properties
         public int ProductCount { get; set; }

@@ -1,4 +1,3 @@
-using ECommerce.Shared.Data;
 using ECommerce.Shared.IRepositories;
 using ECommerce.Shared.Models;
 using Microsoft.EntityFrameworkCore;
@@ -7,14 +6,14 @@ namespace ECommerce.Shared.Repositories
 {
     public class SubCategoryRepository : GenericRepository<SubCategory>, ISubCategoryRepository
     {
-        public SubCategoryRepository(ECommerceDbContext context) : base(context)
+        public SubCategoryRepository(KahreedoContext context) : base(context)
         {
         }
 
         public async Task<IEnumerable<SubCategory>> GetSubCategoriesByCategoryIdAsync(int categoryId)
         {
             return await _dbSet
-                .Where(sc => sc.CategoryID == categoryId && sc.IsActive == true)
+                .Where(sc => sc.CategoryId == categoryId && sc.IsActive == true)
                 .OrderBy(sc => sc.Name)
                 .ToListAsync();
         }

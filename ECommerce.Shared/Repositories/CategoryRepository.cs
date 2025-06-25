@@ -1,4 +1,3 @@
-using ECommerce.Shared.Data;
 using ECommerce.Shared.IRepositories;
 using ECommerce.Shared.Models;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +6,7 @@ namespace ECommerce.Shared.Repositories
 {
     public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
     {
-        public CategoryRepository(ECommerceDbContext context) : base(context)
+        public CategoryRepository(KahreedoContext context) : base(context)
         {
         }
 

@@ -21,8 +21,10 @@ namespace ECommerce.Shared.Common.Extensions
 
             // Register individual repositories (optional - since they're accessible via UnitOfWork)
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductService, ProductService>();
-
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ISupplierRepository, SupplierRepository>();
+            services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            
             return services;
         }
 
@@ -33,9 +35,11 @@ namespace ECommerce.Shared.Common.Extensions
         /// <returns></returns>
         public static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
-            // Register business logic services here when you create them
-            // services.AddScoped<IProductService, ProductService>();
-            // services.AddScoped<IOrderService, OrderService>();
+            // Register business logic services
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            // services.AddScoped<ISupplierService, SupplierService>();
+            // services.AddScoped<ISubCategoryService, SubCategoryService>();
 
             return services;
         }

@@ -1,27 +1,15 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class Role
 {
-    [Table("Roles")]
-    public class Role
-    {
-        public Role()
-        {
-            AdminLogins = new HashSet<AdminLogin>();
-        }
+    public int RoleId { get; set; }
 
-        [Key]
-        public int RoleID { get; set; }
+    public string RoleName { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string RoleName { get; set; } = string.Empty;
+    public string? Description { get; set; }
 
-        [StringLength(500)]
-        public string? Description { get; set; }
-
-        // Navigation properties
-        public virtual ICollection<AdminLogin> AdminLogins { get; set; }
-    }
+    public virtual ICollection<AdminLogin> AdminLogins { get; set; } = new List<AdminLogin>();
 }

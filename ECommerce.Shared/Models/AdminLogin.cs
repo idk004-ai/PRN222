@@ -1,34 +1,23 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class AdminLogin
 {
-    [Table("AdminLogins")]
-    public class AdminLogin
-    {
-        [Key]
-        public int LoginID { get; set; }
+    public int LoginId { get; set; }
 
-        [Required]
-        public int EmpID { get; set; }
+    public int EmpId { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string UserName { get; set; } = string.Empty;
+    public string UserName { get; set; } = null!;
 
-        [Required]
-        [StringLength(255)]
-        public string Password { get; set; } = string.Empty;
+    public string Password { get; set; } = null!;
 
-        public int? RoleType { get; set; }
+    public int? RoleType { get; set; }
 
-        public string? Notes { get; set; }
+    public string? Notes { get; set; }
 
-        // Navigation properties
-        [ForeignKey("EmpID")]
-        public virtual AdminEmployee AdminEmployee { get; set; } = null!;
+    public virtual AdminEmployee Emp { get; set; } = null!;
 
-        [ForeignKey("RoleType")]
-        public virtual Role? Role { get; set; }
-    }
+    public virtual Role? RoleTypeNavigation { get; set; }
 }

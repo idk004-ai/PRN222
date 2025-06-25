@@ -1,37 +1,23 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class Payment
 {
-    [Table("Payments")]
-    public class Payment
-    {
-        public Payment()
-        {
-            Orders = new HashSet<Order>();
-        }
+    public int PaymentId { get; set; }
 
-        [Key]
-        public int PaymentID { get; set; }
+    public int Type { get; set; }
 
-        [Required]
-        public int Type { get; set; }
+    public decimal? CreditAmount { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? CreditAmount { get; set; }
+    public decimal? DebitAmount { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? DebitAmount { get; set; }
+    public decimal? Balance { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? Balance { get; set; }
+    public DateTime? PaymentDateTime { get; set; }
 
-        public DateTime? PaymentDateTime { get; set; }
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        // Navigation properties
-        [ForeignKey("Type")]
-        public virtual PaymentType PaymentType { get; set; } = null!;
-
-        public virtual ICollection<Order> Orders { get; set; }
-    }
+    public virtual PaymentType TypeNavigation { get; set; } = null!;
 }

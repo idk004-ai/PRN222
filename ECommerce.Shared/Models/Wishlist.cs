@@ -1,30 +1,19 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class Wishlist
 {
-    [Table("Wishlists")]
-    public class Wishlist
-    {
-        [Key]
-        public int WishlistID { get; set; }
+    public int WishlistId { get; set; }
 
-        [Required]
-        public int CustomerID { get; set; }
+    public int CustomerId { get; set; }
 
-        [Required]
-        public int ProductID { get; set; }
+    public int ProductId { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? Price { get; set; }
+    public bool? IsActive { get; set; }
 
-        public bool? IsActive { get; set; }
+    public virtual Customer Customer { get; set; } = null!;
 
-        // Navigation properties
-        [ForeignKey("CustomerID")]
-        public virtual Customer Customer { get; set; } = null!;
-
-        [ForeignKey("ProductID")]
-        public virtual Product Product { get; set; } = null!;
-    }
+    public virtual Product Product { get; set; } = null!;
 }

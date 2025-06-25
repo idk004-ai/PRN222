@@ -56,24 +56,24 @@ namespace ECommerce.Shared.Services
             await _unitOfWork.SaveChangesAsync();
             
             // Load navigation properties for response
-            var createdProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.ProductID);
+            var createdProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.ProductId);
             return _mapper.Map<ProductResponseDto>(createdProduct);
         }
 
         public async Task<IEnumerable<object>> GetCategoriesForDropdownAsync()
         {
             var categories = await _unitOfWork.CategoryRepository.GetActiveCategoriesAsync();
-            return categories.Select(c => new { Value = c.CategoryID, Text = c.Name });
+            return categories.Select(c => new { Value = c.CategoryId, Text = c.Name });
         }
 
         public async Task<IEnumerable<object>> GetSubCategoriesForDropdownAsync()
         {
             var subCategories = await _unitOfWork.SubCategoryRepository.GetActiveSubCategoriesAsync();
-            return subCategories.Select(sc => new { Value = sc.SubCategoryID, Text = sc.Name });
+            return subCategories.Select(sc => new { Value = sc.SubCategoryId, Text = sc.Name });
         }        public async Task<IEnumerable<object>> GetSuppliersForDropdownAsync()
         {
             var suppliers = await _unitOfWork.SupplierRepository.GetActiveSuppliersAsync();
-            return suppliers.Select(s => new { Value = s.SupplierID, Text = s.CompanyName });
+            return suppliers.Select(s => new { Value = s.SupplierId, Text = s.CompanyName });
         }
 
         public async Task<ProductResponseDto> UpdateProductAsync(int id, UpdateProductDto request)
@@ -110,7 +110,7 @@ namespace ECommerce.Shared.Services
         public async Task<IEnumerable<object>> GetSubCategoriesByCategoryAsync(int categoryId)
         {
             var subCategories = await _unitOfWork.SubCategoryRepository.GetSubCategoriesByCategoryIdAsync(categoryId);
-            return subCategories.Select(sc => new { Value = sc.SubCategoryID, Text = sc.Name });
+            return subCategories.Select(sc => new { Value = sc.SubCategoryId, Text = sc.Name });
         }
     }
 }

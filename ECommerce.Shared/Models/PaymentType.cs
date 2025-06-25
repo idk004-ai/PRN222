@@ -1,27 +1,15 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class PaymentType
 {
-    [Table("PaymentTypes")]
-    public class PaymentType
-    {
-        public PaymentType()
-        {
-            Payments = new HashSet<Payment>();
-        }
+    public int PayTypeId { get; set; }
 
-        [Key]
-        public int PayTypeID { get; set; }
+    public string TypeName { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string TypeName { get; set; } = string.Empty;
+    public string? Description { get; set; }
 
-        [StringLength(500)]
-        public string? Description { get; set; }
-
-        // Navigation properties
-        public virtual ICollection<Payment> Payments { get; set; }
-    }
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

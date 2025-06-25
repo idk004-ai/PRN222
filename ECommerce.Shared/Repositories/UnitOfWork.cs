@@ -1,12 +1,12 @@
-using ECommerce.Shared.Data;
 using ECommerce.Shared.IRepositories;
+using ECommerce.Shared.Models;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ECommerce.Shared.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ECommerceDbContext _context;
+        private readonly KahreedoContext _context;
         private IDbContextTransaction? _transaction;
         private IProductRepository? _productRepository;
         private ICategoryRepository? _categoryRepository;
@@ -19,7 +19,7 @@ namespace ECommerce.Shared.Repositories
         public ISubCategoryRepository SubCategoryRepository => _subCategoryRepository ??= new SubCategoryRepository(_context);
         public ISupplierRepository SupplierRepository => _supplierRepository ??= new SupplierRepository(_context);
 
-        public UnitOfWork(ECommerceDbContext context)
+        public UnitOfWork(KahreedoContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

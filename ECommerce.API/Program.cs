@@ -1,48 +1,39 @@
 using Microsoft.EntityFrameworkCore;
-using ECommerce.Shared.Data;
 using ECommerce.Shared.Common.Extensions;
+using ECommerce.Shared.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddGlobalExceptionHandling();
-
-// Add CORS for React client
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactClient", policy =>
+    options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://localhost:3000") // React dev server
+        policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
     });
-    
-    // For development - allow all origins
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
 });
+
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo 
-    { 
-        Title = "ECommerce API", 
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "ECommerce API",
         Version = "v1",
         Description = "E-Commerce Web API for React Client"
     });
 });
 
 // Add Entity Framework
-builder.Services.AddDbContext<ECommerceDbContext>(options =>
+builder.Services.AddDbContext<KahreedoContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add ECommerce services (repositories, Unit of Work, business services)
@@ -63,17 +54,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseGlobalExceptionHandling();
-app.UseHttpsRedirection();
+app.UseCors("AllowReactApp");
 
-// Use React-specific CORS in development, AllowAll in production for now
-if (app.Environment.IsDevelopment())
-{
-    app.UseCors("AllowReactClient");
-}
-else
-{
-    app.UseCors("AllowAll");
-}
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
