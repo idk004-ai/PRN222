@@ -99,24 +99,60 @@ export interface ProductFormData {
     picture4File?: File | null;
 }
 
+// New interface with PascalCase naming that matches backend DTO
+export interface CreateProductFormData {
+    Name: string;
+    SupplierID: number;
+    CategoryID: number;
+    SubCategoryID?: number;
+    QuantityPerUnit?: string;
+    UnitPrice: number;
+    OldPrice?: number;
+    UnitWeight?: string;
+    Size?: string;
+    Discount?: number;
+    UnitInStock?: number;
+    UnitOnOrder?: number;
+    ProductAvailable: boolean;
+    AddBadge: boolean;
+    OfferTitle?: string;
+    OfferBadgeClass?: string;
+    ShortDescription?: string;
+    LongDescription?: string;
+    AltText?: string;
+    Note?: string;
+    ImageFile?: File | null;
+    Picture1File?: File | null;
+    Picture2File?: File | null;
+    Picture3File?: File | null;
+    Picture4File?: File | null;
+}
+
 export interface Supplier {
-    id: number;
-    name: string;
+    supplierID: number;
+    companyName: string;
     contactName?: string;
+    contactTitle?: string;
     phone?: string;
     email?: string;
 }
 
 export interface Category {
-    id: number;
-    name: string;
+    categoryID: number;
     description?: string;
-    parentCategoryID?: number;
+    isActive: boolean;
+    name: string;
+    picture1?: string;
+    picture2?: string;
+    productCount?: number;
+    subCategoryCount?: number;
 }
 
 export interface SubCategory {
-    id: number;
-    name: string;
+    subCategoryID: number;
     categoryID: number;
+    categoryName?: string;
+    name: string;
     description?: string;
+    isActive?: boolean;
 }

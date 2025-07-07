@@ -46,7 +46,7 @@ export const ProductCard = ({ product, onEdit, onDelete, onView }: ProductCardPr
             {/* Product Image */}
             <div className="aspect-square relative">
                 <img
-                    src={imageUrl}
+                    // src={imageUrl}
                     alt={product.altText || product.name}
                     className="w-full h-full object-cover"
                     onError={(e) => {

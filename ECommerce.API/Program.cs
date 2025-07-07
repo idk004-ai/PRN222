@@ -55,6 +55,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseGlobalExceptionHandling();
 app.UseCors("AllowReactApp");
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

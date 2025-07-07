@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Product, ProductListResponse, ProductFilter, ProductFormData, Supplier, Category, SubCategory, LegacyProduct } from '../types/product';
+import type { Product, ProductListResponse, ProductFilter, ProductFormData, CreateProductFormData, Supplier, Category, SubCategory, LegacyProduct } from '../types/product';
 
 const API_BASE_URL = import.meta.env.VITE_BASE_API || 'http://localhost:5214/api';
 
@@ -18,7 +18,7 @@ export const productService = {
             const params = new URLSearchParams();
             params.append('pageNumber', page.toString());
             params.append('pageSize', pageSize.toString());
-            
+
             if (filters?.search) {
                 params.append('searchTerm', filters.search);
             }
@@ -96,9 +96,13 @@ export const productService = {
     },
 
     // Create new product
-    createProduct: async (productData: ProductFormData): Promise<Product | null> => {
+    createProduct: async (productData: CreateProductFormData): Promise<Product | null> => {
         try {
-            const response = await api.post('/products', productData);
+            const response = await api.post('/products', productData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             return response.data;
         } catch (error) {
             console.error('Error creating product:', error);
@@ -161,7 +165,7 @@ export const productService = {
     // Get subcategories
     getSubCategories: async (categoryId?: number): Promise<SubCategory[]> => {
         try {
-            const url = categoryId ? `/subcategories?categoryId=${categoryId}` : '/subcategories';
+            const url = categoryId ? `/subcategories/by-category/${categoryId}` : '/subcategories';
             const response = await api.get(url);
             return response.data;
         } catch (error) {
@@ -215,9 +219,9 @@ export const productService = {
 
     // Helper function to get primary image URL
     getPrimaryImageUrl: (product: Product): string => {
-        return product.imageUrl || 
-               product.picture1 || 
-               `https://via.placeholder.com/300x300/4F46E5/FFFFFF?text=${encodeURIComponent(product.name)}`;
+        return product.imageUrl ||
+            product.picture1 ||
+            `https://via.placeholder.com/300x300/4F46E5/FFFFFF?text=${encodeURIComponent(product.name)}`;
     },
 
     // Helper function to get all product images
@@ -228,12 +232,12 @@ export const productService = {
         if (product.picture2) images.push(product.picture2);
         if (product.picture3) images.push(product.picture3);
         if (product.picture4) images.push(product.picture4);
-        
+
         // If no images, return placeholder
         if (images.length === 0) {
             images.push(`https://via.placeholder.com/300x300/4F46E5/FFFFFF?text=${encodeURIComponent(product.name)}`);
         }
-        
+
         return images;
     }
 };

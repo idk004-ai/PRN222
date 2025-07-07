@@ -1,113 +1,150 @@
 import { useState, useEffect } from 'react';
+import { useForm, type Resolver } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal } from '../ui/Modal';
 import { FormField } from '../ui/FormField';
 import { Button } from '../ui/Button';
 import { Upload } from 'lucide-react';
-import type { ProductFormData, Supplier, Category, SubCategory } from '../../types/product';
+import type { CreateProductFormData, Supplier, Category, SubCategory } from '../../types/product';
 import { productService } from '../../services/productService';
+import { productSchema, type ProductFormSchema } from '../../schemas/productSchema';
 
 interface AddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: ProductFormData) => Promise<void>;
+  onSubmit: (data: CreateProductFormData) => Promise<void>;
 }
 
 export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalProps) => {
-  const [formData, setFormData] = useState<ProductFormData>({
-    name: '',
-    supplierID: 0,
-    categoryID: 0,
-    subCategoryID: undefined,
-    quantityPerUnit: '',
-    unitPrice: 0,
-    oldPrice: undefined,
-    unitWeight: '',
-    size: '',
-    discount: 0,
-    unitInStock: 0,
-    unitOnOrder: 0,
-    productAvailable: true,
-    addBadge: false,
-    offerTitle: '',
-    offerBadgeClass: '',
-    shortDescription: '',
-    longDescription: '',
-    altText: '',
-    note: '',
-    imageFile: null,
-    picture1File: null,
-    picture2File: null,
-    picture3File: null,
-    picture4File: null,
+  // React Hook Form setup
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors, isSubmitting }
+  } = useForm<ProductFormSchema>({
+    resolver: zodResolver(productSchema) as Resolver<ProductFormSchema>,
+    defaultValues: {
+      Name: '',
+      SupplierID: 0,
+      CategoryID: 0,
+      SubCategoryID: undefined,
+      QuantityPerUnit: '',
+      UnitPrice: 0,
+      OldPrice: undefined,
+      UnitWeight: '',
+      Size: '',
+      Discount: 0,
+      UnitInStock: 0,
+      UnitOnOrder: 0,
+      ProductAvailable: true,
+      AddBadge: false,
+      OfferTitle: '',
+      OfferBadgeClass: '',
+      ShortDescription: '',
+      LongDescription: '',
+      AltText: '',
+      Note: '',
+      ImageFile: null,
+      Picture1File: null,
+      Picture2File: null,
+      Picture3File: null,
+      Picture4File: null,
+    }
   });
+
+  // Watch specific fields for conditional logic
+  const watchCategoryID = watch('CategoryID');
+  const watchAddBadge = watch('AddBadge');
 
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
-  const [loading, setLoading] = useState(false);
   const [loadingSuppliers, setLoadingSuppliers] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [loadingSubCategories, setLoadingSubCategories] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [serverError, setServerError] = useState<string | null>(null);
 
   // Load suppliers and categories when modal opens
   useEffect(() => {
     if (isOpen) {
       loadFormData();
+    } else {
+      // Reset form when modal closes
+      resetForm();
     }
   }, [isOpen]);
 
   // Load subcategories when category changes
   useEffect(() => {
-    if (formData.categoryID && formData.categoryID > 0) {
-      loadSubCategories(formData.categoryID);
+    if (watchCategoryID && watchCategoryID > 0) {
+      loadSubCategories(watchCategoryID);
     } else {
       // Clear subcategories if no category selected
       setSubCategories([]);
-      setFormData(prev => ({
-        ...prev,
-        subCategoryID: undefined
-      }));
+      setValue('SubCategoryID', undefined);
     }
-  }, [formData.categoryID]);
+  }, [watchCategoryID, setValue]);
 
   const loadFormData = async () => {
+    // Load suppliers and categories in parallel
+    const loadPromises = [];
+
+    // Load suppliers
     setLoadingSuppliers(true);
-    setLoadingCategories(true);
-    
-    try {
-      // Load suppliers
-      try {
-        const suppliersData = await productService.getSuppliers();
+    const loadSuppliersPromise = productService.getSuppliers()
+      .then(suppliersData => {
         setSuppliers(suppliersData);
-      } catch (error) {
+      })
+      .catch(error => {
         console.error('Error loading suppliers:', error);
         setSuppliers([]);
-      } finally {
+      })
+      .finally(() => {
         setLoadingSuppliers(false);
-      }
+      });
 
-      // Load categories
-      try {
-        const categoriesData = await productService.getCategories();
+    // Load categories
+    setLoadingCategories(true);
+    const loadCategoriesPromise = productService.getCategories()
+      .then(categoriesData => {
+        console.log('Category data: ' , categoriesData)
         setCategories(categoriesData);
-      } catch (error) {
+      })
+      .catch(error => {
         console.error('Error loading categories:', error);
         setCategories([]);
-      } finally {
+      })
+      .finally(() => {
         setLoadingCategories(false);
-      }
-    } catch (error) {
-      console.error('Error loading form data:', error);
-      setLoadingSuppliers(false);
-      setLoadingCategories(false);
-    }
+      });
+
+    // Wait for both to complete
+    loadPromises.push(loadSuppliersPromise, loadCategoriesPromise);
+    await Promise.all(loadPromises);
   };
+
+  // const loadSubCategories = async (categoryId: number) => {
+  //   setLoadingSubCategories(true);
+  //   try {
+  //     const subCategoriesData = await productService.getSubCategories(categoryId);
+  //     console.log('Subcategories data: ', subCategoriesData)
+  //     setSubCategories(subCategoriesData);
+  //   } catch (error) {
+  //     console.error('Error loading subcategories:', error);
+  //     setSubCategories([]);
+  //   } finally {
+  //     setLoadingSubCategories(false);
+  //   }
+  // };
 
   const loadSubCategories = async (categoryId: number) => {
     setLoadingSubCategories(true);
     try {
       const subCategoriesData = await productService.getSubCategories(categoryId);
+      console.log('Subcategories data: ', subCategoriesData)
       setSubCategories(subCategoriesData);
     } catch (error) {
       console.error('Error loading subcategories:', error);
@@ -117,174 +154,147 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
     }
   };
 
-  const handleInputChange = (field: keyof ProductFormData, value: any) => {
-    setFormData(prev => {
-      const newData = { ...prev, [field]: value };
-      
-      // If category changes, reset subcategory
-      if (field === 'categoryID') {
-        newData.subCategoryID = undefined;
-      }
-      
-      return newData;
-    });
-    
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: ''
-      }));
-    }
+  const resetForm = () => {
+    reset();
+    setSuppliers([]);
+    setCategories([]);
+    setSubCategories([]);
+    setServerError(null);
   };
 
-  const handleFileChange = (field: keyof ProductFormData, file: File | null) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: file
-    }));
+  const handleFileChange = (field: keyof ProductFormSchema, file: File | null) => {
+    setValue(field as any, file);
   };
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Product name is required';
-    }
-    if (!formData.supplierID) {
-      newErrors.supplierID = 'Supplier is required';
-    }
-    if (!formData.categoryID) {
-      newErrors.categoryID = 'Category is required';
-    }
-    if (formData.unitPrice <= 0) {
-      newErrors.unitPrice = 'Unit price must be greater than 0';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
-    setLoading(true);
+  const onFormSubmit = async (data: ProductFormSchema) => {
     try {
+      setServerError(null);
+      
+      // Data is already in PascalCase format from schema, no conversion needed
+      const formData: CreateProductFormData = {
+        Name: data.Name,
+        SupplierID: data.SupplierID,
+        CategoryID: data.CategoryID,
+        SubCategoryID: data.SubCategoryID,
+        QuantityPerUnit: data.QuantityPerUnit,
+        UnitPrice: data.UnitPrice,
+        OldPrice: data.OldPrice,
+        UnitWeight: data.UnitWeight,
+        Size: data.Size,
+        Discount: data.Discount,
+        UnitInStock: data.UnitInStock,
+        UnitOnOrder: data.UnitOnOrder,
+        ProductAvailable: data.ProductAvailable,
+        AddBadge: data.AddBadge,
+        OfferTitle: data.OfferTitle,
+        OfferBadgeClass: data.OfferBadgeClass,
+        ShortDescription: data.ShortDescription,
+        LongDescription: data.LongDescription,
+        AltText: data.AltText,
+        Note: data.Note,
+        ImageFile: data.ImageFile,
+        Picture1File: data.Picture1File,
+        Picture2File: data.Picture2File,
+        Picture3File: data.Picture3File,
+        Picture4File: data.Picture4File,
+      };
+
       await onSubmit(formData);
       onClose();
       resetForm();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating product:', error);
-    } finally {
-      setLoading(false);
+
+      if (error.response?.data?.message) {
+        setServerError(error.response.data.message);
+      } else {
+        setServerError('An unexpected error occurred. Please try again.');
+      }
     }
   };
 
-  const resetForm = () => {
-    setFormData({
-      name: '',
-      supplierID: 0,
-      categoryID: 0,
-      subCategoryID: undefined,
-      quantityPerUnit: '',
-      unitPrice: 0,
-      oldPrice: undefined,
-      unitWeight: '',
-      size: '',
-      discount: 0,
-      unitInStock: 0,
-      unitOnOrder: 0,
-      productAvailable: true,
-      addBadge: false,
-      offerTitle: '',
-      offerBadgeClass: '',
-      shortDescription: '',
-      longDescription: '',
-      altText: '',
-      note: '',
-      imageFile: null,
-      picture1File: null,
-      picture2File: null,
-      picture3File: null,
-      picture4File: null,
-    });
-    setErrors({});
+  const FileUploadField = ({ label, field, required = false }: { 
+    label: string; 
+    field: keyof ProductFormSchema; 
+    required?: boolean 
+  }) => {
+    const fieldValue = watch(field);
+    
+    return (
+      <FormField label={label} required={required} error={errors[field]?.message?.toString()}>
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleFileChange(field, e.target.files?.[0] || null)}
+            className="hidden"
+            id={field}
+          />
+          <label htmlFor={field} className="cursor-pointer">
+            <Upload className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+            <p className="text-sm text-gray-600">Click to upload image</p>
+            {fieldValue && (
+              <p className="text-xs text-blue-600 mt-1">{(fieldValue as File).name}</p>
+            )}
+          </label>
+        </div>
+      </FormField>
+    );
   };
-
-  const FileUploadField = ({ label, field, required = false }: { label: string; field: keyof ProductFormData; required?: boolean }) => (
-    <FormField label={label} required={required} error={errors[field]}>
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleFileChange(field, e.target.files?.[0] || null)}
-          className="hidden"
-          id={field}
-        />
-        <label htmlFor={field} className="cursor-pointer">
-          <Upload className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-          <p className="text-sm text-gray-600">Click to upload image</p>
-          {formData[field] as File && (
-            <p className="text-xs text-blue-600 mt-1">{(formData[field] as File).name}</p>
-          )}
-        </label>
-      </div>
-    </FormField>
-  );
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Product" size="xl">
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
+        {/* General Error Display */}
+        {serverError && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-4">
+            <div className="text-red-800 text-sm">{serverError}</div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Basic Information */}
           <div className="md:col-span-2">
             <h4 className="text-lg font-medium text-gray-900 mb-4">Basic Information</h4>
           </div>
 
-          <FormField label="Product Name" required error={errors.name}>
+          <FormField label="Product Name" required error={errors.Name?.message}>
             <input
+              {...register('Name')}
               type="text"
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter product name"
             />
           </FormField>
 
-          <FormField label="Supplier" required error={errors.supplierID}>
+          <FormField label="Supplier" required error={errors.SupplierID?.message}>
             <select
-              value={formData.supplierID}
-              onChange={(e) => handleInputChange('supplierID', parseInt(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              {...register('SupplierID', { valueAsNumber: true })}
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${loadingSuppliers ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               disabled={loadingSuppliers}
             >
               <option value={0}>
                 {loadingSuppliers ? 'Loading suppliers...' : 'Select a supplier'}
               </option>
               {suppliers.map(supplier => (
-                <option key={supplier.id} value={supplier.id}>
-                  {supplier.name}
+                <option key={supplier.supplierID} value={supplier.supplierID}>
+                  {supplier.companyName}
                 </option>
               ))}
             </select>
           </FormField>
 
-          <FormField label="Category" required error={errors.categoryID}>
+          <FormField label="Category" required error={errors.CategoryID?.message}>
             <select
-              value={formData.categoryID}
-              onChange={(e) => handleInputChange('categoryID', parseInt(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              {...register('CategoryID', { valueAsNumber: true })}
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${loadingCategories ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               disabled={loadingCategories}
             >
               <option value={0}>
                 {loadingCategories ? 'Loading categories...' : 'Select a category'}
               </option>
               {categories.map(category => (
-                <option key={category.id} value={category.id}>
+                <option key={category.categoryID} value={category.categoryID}>
                   {category.name}
                 </option>
               ))}
@@ -293,21 +303,22 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
 
           <FormField label="Sub Category">
             <select
-              value={formData.subCategoryID || 0}
-              onChange={(e) => handleInputChange('subCategoryID', e.target.value ? parseInt(e.target.value) : undefined)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              disabled={!formData.categoryID || loadingSubCategories}
+              {...register('SubCategoryID', { 
+                setValueAs: (value) => value === '0' || value === '' ? undefined : Number(value)
+              })}
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${(!watchCategoryID || loadingSubCategories) ? 'bg-gray-50 cursor-not-allowed' : ''}`}
+              disabled={!watchCategoryID || loadingSubCategories}
             >
-              <option value={0}>
-                {loadingSubCategories 
-                  ? 'Loading subcategories...' 
-                  : !formData.categoryID 
-                    ? 'Select a category first' 
-                    : 'Select a sub category'
+              <option value="">
+                {loadingSubCategories
+                  ? 'Loading subcategories...'
+                  : !watchCategoryID || watchCategoryID === 0
+                    ? 'Select a category first'
+                    : 'Select a sub category (optional)'
                 }
               </option>
               {subCategories.map(subCategory => (
-                <option key={subCategory.id} value={subCategory.id}>
+                <option key={subCategory.subCategoryID} value={subCategory.subCategoryID}>
                   {subCategory.name}
                 </option>
               ))}
@@ -319,64 +330,60 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <h4 className="text-lg font-medium text-gray-900 mb-4 mt-6">Pricing & Stock</h4>
           </div>
 
-          <FormField label="Unit Price" required error={errors.unitPrice}>
+          <FormField label="Unit Price" required error={errors.UnitPrice?.message}>
             <input
+              {...register('UnitPrice', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              value={formData.unitPrice}
-              onChange={(e) => handleInputChange('unitPrice', parseFloat(e.target.value) || 0)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="0.00"
             />
           </FormField>
 
-          <FormField label="Old Price">
+          <FormField label="Old Price" error={errors.OldPrice?.message}>
             <input
+              {...register('OldPrice', { 
+                setValueAs: (value) => value === '' ? undefined : Number(value)
+              })}
               type="number"
               step="0.01"
-              value={formData.oldPrice || ''}
-              onChange={(e) => handleInputChange('oldPrice', e.target.value ? parseFloat(e.target.value) : undefined)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="0.00"
             />
           </FormField>
 
-          <FormField label="Discount (%)">
+          <FormField label="Discount (%)" error={errors.Discount?.message}>
             <input
+              {...register('Discount', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              value={formData.discount}
-              onChange={(e) => handleInputChange('discount', parseFloat(e.target.value) || 0)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="0"
             />
           </FormField>
 
-          <FormField label="Units in Stock">
+          <FormField label="Units in Stock" error={errors.UnitInStock?.message}>
             <input
+              {...register('UnitInStock', { valueAsNumber: true })}
               type="number"
-              value={formData.unitInStock}
-              onChange={(e) => handleInputChange('unitInStock', parseInt(e.target.value) || 0)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="0"
             />
           </FormField>
 
-          <FormField label="Units on Order">
+          <FormField label="Units on Order" error={errors.UnitOnOrder?.message}>
             <input
+              {...register('UnitOnOrder', { valueAsNumber: true })}
               type="number"
-              value={formData.unitOnOrder}
-              onChange={(e) => handleInputChange('unitOnOrder', parseInt(e.target.value) || 0)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="0"
             />
           </FormField>
 
-          <FormField label="Quantity per Unit">
+          <FormField label="Quantity per Unit" error={errors.QuantityPerUnit?.message}>
             <input
+              {...register('QuantityPerUnit')}
               type="text"
-              value={formData.quantityPerUnit}
-              onChange={(e) => handleInputChange('quantityPerUnit', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="e.g., 10 boxes x 20 bags"
             />
@@ -387,40 +394,36 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <h4 className="text-lg font-medium text-gray-900 mb-4 mt-6">Product Details</h4>
           </div>
 
-          <FormField label="Unit Weight">
+          <FormField label="Unit Weight" error={errors.UnitWeight?.message}>
             <input
+              {...register('UnitWeight')}
               type="text"
-              value={formData.unitWeight}
-              onChange={(e) => handleInputChange('unitWeight', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="e.g., 2.5 kg"
             />
           </FormField>
 
-          <FormField label="Size">
+          <FormField label="Size" error={errors.Size?.message}>
             <input
+              {...register('Size')}
               type="text"
-              value={formData.size}
-              onChange={(e) => handleInputChange('size', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="e.g., L, XL, 42"
             />
           </FormField>
 
-          <FormField label="Short Description">
+          <FormField label="Short Description" error={errors.ShortDescription?.message}>
             <textarea
-              value={formData.shortDescription}
-              onChange={(e) => handleInputChange('shortDescription', e.target.value)}
+              {...register('ShortDescription')}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Brief product description"
             />
           </FormField>
 
-          <FormField label="Long Description">
+          <FormField label="Long Description" error={errors.LongDescription?.message}>
             <textarea
-              value={formData.longDescription}
-              onChange={(e) => handleInputChange('longDescription', e.target.value)}
+              {...register('LongDescription')}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Detailed product description"
@@ -434,10 +437,9 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
 
           <div className="flex items-center">
             <input
+              {...register('AddBadge')}
               type="checkbox"
               id="addBadge"
-              checked={formData.addBadge}
-              onChange={(e) => handleInputChange('addBadge', e.target.checked)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="addBadge" className="ml-2 block text-sm text-gray-900">
@@ -447,10 +449,9 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
 
           <div className="flex items-center">
             <input
+              {...register('ProductAvailable')}
               type="checkbox"
               id="productAvailable"
-              checked={formData.productAvailable}
-              onChange={(e) => handleInputChange('productAvailable', e.target.checked)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="productAvailable" className="ml-2 block text-sm text-gray-900">
@@ -458,23 +459,21 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             </label>
           </div>
 
-          {formData.addBadge && (
+          {watchAddBadge && (
             <>
-              <FormField label="Offer Title">
+              <FormField label="Offer Title" error={errors.OfferTitle?.message}>
                 <input
+                  {...register('OfferTitle')}
                   type="text"
-                  value={formData.offerTitle}
-                  onChange={(e) => handleInputChange('offerTitle', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., HOT, NEW, SALE"
                 />
               </FormField>
 
-              <FormField label="Offer Badge Class">
+              <FormField label="Offer Badge Class" error={errors.OfferBadgeClass?.message}>
                 <input
+                  {...register('OfferBadgeClass')}
                   type="text"
-                  value={formData.offerBadgeClass}
-                  onChange={(e) => handleInputChange('offerBadgeClass', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   placeholder="CSS class for badge styling"
                 />
@@ -487,25 +486,23 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <h4 className="text-lg font-medium text-gray-900 mb-4 mt-6">Product Images</h4>
           </div>
 
-          <FileUploadField label="Main Image" field="imageFile" />
-          <FileUploadField label="Picture 1" field="picture1File" />
-          <FileUploadField label="Picture 2" field="picture2File" />
-          <FileUploadField label="Picture 3" field="picture3File" />
+          <FileUploadField label="Main Image" field="ImageFile" />
+          <FileUploadField label="Picture 1" field="Picture1File" />
+          <FileUploadField label="Picture 2" field="Picture2File" />
+          <FileUploadField label="Picture 3" field="Picture3File" />
 
-          <FormField label="Alt Text">
+          <FormField label="Alt Text" error={errors.AltText?.message}>
             <input
+              {...register('AltText')}
               type="text"
-              value={formData.altText}
-              onChange={(e) => handleInputChange('altText', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Alternative text for images"
             />
           </FormField>
 
-          <FormField label="Note">
+          <FormField label="Note" error={errors.Note?.message}>
             <textarea
-              value={formData.note}
-              onChange={(e) => handleInputChange('note', e.target.value)}
+              {...register('Note')}
               rows={2}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Additional notes"
@@ -519,14 +516,14 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             type="button"
             variant="secondary"
             onClick={onClose}
-            disabled={loading}
+            disabled={isSubmitting}
           >
             Cancel
           </Button>
           <Button
             type="submit"
-            loading={loading}
-            disabled={loading}
+            loading={isSubmitting}
+            disabled={isSubmitting}
           >
             Create Product
           </Button>

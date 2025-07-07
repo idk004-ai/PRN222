@@ -1,14 +1,14 @@
-import axios from 'axios';
+// import axios from 'axios';
 import type { DashboardStats, SalesData, TopProduct, RecentOrder, LowStockProduct } from '../types/dashboard';
 
-const API_BASE_URL = 'https://localhost:7066/api'; // Adjust based on your API port
+// const API_BASE_URL = 'https://localhost:7066/api'; // Adjust based on your API port
 
-const api = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
+// const api = axios.create({
+//     baseURL: API_BASE_URL,
+//     headers: {
+//         'Content-Type': 'application/json',
+//     },
+// });
 
 export const dashboardService = {
     // Get dashboard statistics

@@ -85,7 +85,7 @@ namespace ECommerce.API.Controllers
             await ProcessImageUploads(model);
 
             var result = await _productService.CreateProductAsync(model);
-            return CreatedAtAction("Created", result);
+            return CreatedAtAction(nameof(GetProduct), new { id = result.ProductId }, result);
         }
 
         /// <summary>
@@ -130,51 +130,6 @@ namespace ECommerce.API.Controllers
 
             await _productService.DeleteProductAsync(id);
             return Ok(new { message = ProductConstant.PRODUCT_DELETED_SUCCESSFULLY });
-        }
-
-        /// <summary>
-        /// Get subcategories by category ID
-        /// </summary>
-        /// <param name="categoryId">Category ID</param>
-        /// <returns>List of subcategories</returns>
-        [HttpGet("subcategories/{categoryId}")]
-        public async Task<ActionResult<IEnumerable<object>>> GetSubCategories(int categoryId)
-        {
-            var subCategories = await _productService.GetSubCategoriesByCategoryAsync(categoryId);
-            return Ok(subCategories);
-        }
-
-        /// <summary>
-        /// Get suppliers for dropdown
-        /// </summary>
-        /// <returns>List of suppliers</returns>
-        [HttpGet("suppliers")]
-        public async Task<ActionResult<IEnumerable<object>>> GetSuppliers()
-        {
-            var suppliers = await _productService.GetSuppliersForDropdownAsync();
-            return Ok(suppliers);
-        }
-
-        /// <summary>
-        /// Get categories for dropdown
-        /// </summary>
-        /// <returns>List of categories</returns>
-        [HttpGet("categories")]
-        public async Task<ActionResult<IEnumerable<object>>> GetCategories()
-        {
-            var categories = await _productService.GetCategoriesForDropdownAsync();
-            return Ok(categories);
-        }
-
-        /// <summary>
-        /// Get subcategories for dropdown
-        /// </summary>
-        /// <returns>List of subcategories</returns>
-        [HttpGet("subcategories")]
-        public async Task<ActionResult<IEnumerable<object>>> GetSubCategories()
-        {
-            var subCategories = await _productService.GetSubCategoriesForDropdownAsync();
-            return Ok(subCategories);
         }
 
         /// <summary>
