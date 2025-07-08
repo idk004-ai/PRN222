@@ -1,101 +1,67 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class Customer
 {
-    [Table("Customers")]
-    public class Customer
-    {
-        public Customer()
-        {
-            Reviews = new HashSet<Review>();
-            Wishlists = new HashSet<Wishlist>();
-            Orders = new HashSet<Order>();
-        }
+    public int CustomerId { get; set; }
 
-        [Key]
-        public int CustomerID { get; set; }
+    public string FirstName { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string LastName { get; set; } = string.Empty;
+    public string UserName { get; set; } = null!;
 
-        [Required]
-        [StringLength(50)]
-        public string UserName { get; set; } = string.Empty;
+    public string Password { get; set; } = null!;
 
-        [Required]
-        [StringLength(255)]
-        public string Password { get; set; } = string.Empty;
+    public int? Age { get; set; }
 
-        public int? Age { get; set; }
+    public string? Gender { get; set; }
 
-        [StringLength(10)]
-        public string? Gender { get; set; }
+    public DateOnly? DateofBirth { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
+    public string? Organization { get; set; }
 
-        [StringLength(255)]
-        public string? Organization { get; set; }
+    public string? Country { get; set; }
 
-        [StringLength(100)]
-        public string? Country { get; set; }
+    public string? State { get; set; }
 
-        [StringLength(100)]
-        public string? State { get; set; }
+    public string? City { get; set; }
 
-        [StringLength(100)]
-        public string? City { get; set; }
+    public string? PostalCode { get; set; }
 
-        [StringLength(20)]
-        public string? PostalCode { get; set; }
+    public string? Email { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+    public string? AltEmail { get; set; }
 
-        [StringLength(255)]
-        [EmailAddress]
-        public string? AltEmail { get; set; }
+    public string? Phone1 { get; set; }
 
-        [StringLength(20)]
-        public string? Phone1 { get; set; }
+    public string? Phone2 { get; set; }
 
-        [StringLength(20)]
-        public string? Phone2 { get; set; }
+    public string? Mobile1 { get; set; }
 
-        [StringLength(20)]
-        public string? Mobile1 { get; set; }
+    public string? Mobile2 { get; set; }
 
-        [StringLength(20)]
-        public string? Mobile2 { get; set; }
+    public string? Address1 { get; set; }
 
-        [StringLength(500)]
-        public string? Address1 { get; set; }
+    public string? Address2 { get; set; }
 
-        [StringLength(500)]
-        public string? Address2 { get; set; }
+    public string? Picture { get; set; }
 
-        [StringLength(500)]
-        public string? Picture { get; set; }
+    public string? Status { get; set; }
 
-        [StringLength(50)]
-        public string? Status { get; set; }
+    public DateTime? LastLogin { get; set; }
 
-        public DateTime? LastLogin { get; set; }
+    public DateOnly? Created { get; set; }
 
-        public DateTime? Created { get; set; }
+    public string? Notes { get; set; }
 
-        public string? Notes { get; set; }
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        // Navigation properties
-        public virtual ICollection<Review> Reviews { get; set; }
-        public virtual ICollection<Wishlist> Wishlists { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
-    }
+    public virtual ICollection<RecentlyView> RecentlyViews { get; set; } = new List<RecentlyView>();
+
+    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+    public virtual ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
 }

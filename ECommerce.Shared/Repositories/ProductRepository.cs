@@ -1,4 +1,3 @@
-using ECommerce.Shared.Data;
 using ECommerce.Shared.DTOs;
 using ECommerce.Shared.DTOs.Common;
 using ECommerce.Shared.IRepositories;
@@ -9,7 +8,7 @@ namespace ECommerce.Shared.Repositories
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        public ProductRepository(ECommerceDbContext context) : base(context)
+        public ProductRepository(KahreedoContext context) : base(context)
         {
         }
 
@@ -55,7 +54,7 @@ namespace ECommerce.Shared.Repositories
             {
                 "name" => sortDescending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
                 "price" => sortDescending ? query.OrderByDescending(p => p.UnitPrice) : query.OrderBy(p => p.UnitPrice),
-                _ => query.OrderByDescending(p => p.ProductID) // Default sorting by Id
+                _ => query.OrderByDescending(p => p.ProductId) // Default sorting by Id
             };
         }
     }

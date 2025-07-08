@@ -1,52 +1,31 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class AdminEmployee
 {
-    [Table("AdminEmployees")]
-    public class AdminEmployee
-    {
-        public AdminEmployee()
-        {
-            AdminLogins = new HashSet<AdminLogin>();
-        }
+    public int EmpId { get; set; }
 
-        [Key]
-        public int EmpID { get; set; }
+    public string FirstName { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string FirstName { get; set; } = string.Empty;
+    public string? LastName { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string LastName { get; set; } = string.Empty;
+    public int? Age { get; set; }
 
-        public int? Age { get; set; }
+    public DateOnly? DateofBirth { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
+    public string? Gender { get; set; }
 
-        [StringLength(10)]
-        public string? Gender { get; set; }
+    public string? Email { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+    public string? Address { get; set; }
 
-        [StringLength(500)]
-        public string? Address { get; set; }
+    public string? Phone { get; set; }
 
-        [StringLength(20)]
-        public string? Phone { get; set; }
+    public string Mobile { get; set; } = null!;
 
-        [StringLength(20)]
-        public string? Mobile { get; set; }
+    public string? PhotoPath { get; set; }
 
-        [StringLength(500)]
-        public string? PhotoPath { get; set; }
-
-        // Navigation properties
-        public virtual ICollection<AdminLogin> AdminLogins { get; set; }
-    }
+    public virtual ICollection<AdminLogin> AdminLogins { get; set; } = new List<AdminLogin>();
 }

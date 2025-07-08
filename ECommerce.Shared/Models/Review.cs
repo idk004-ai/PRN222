@@ -1,39 +1,29 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class Review
 {
-    [Table("Reviews")]
-    public class Review
-    {
-        [Key]
-        public int ReviewID { get; set; }
+    public int ReviewId { get; set; }
 
-        public int? CustomerID { get; set; }
+    public int? CustomerId { get; set; }
 
-        public int? ProductID { get; set; }
+    public int? ProductId { get; set; }
 
-        [StringLength(100)]
-        public string? Name { get; set; }
+    public string? Name { get; set; }
 
-        [StringLength(255)]
-        [EmailAddress]
-        public string? Email { get; set; }
+    public string? Email { get; set; }
 
-        public string? ReviewText { get; set; }
+    public string? Review1 { get; set; }
 
-        [Range(1, 5)]
-        public int? Rate { get; set; }
+    public int? Rate { get; set; }
 
-        public DateTime? DateTime { get; set; }
+    public DateTime? DateTime { get; set; }
 
-        public bool? IsDeleted { get; set; }
+    public bool? IsDelete { get; set; }
 
-        // Navigation properties
-        [ForeignKey("CustomerID")]
-        public virtual Customer? Customer { get; set; }
+    public virtual Customer? Customer { get; set; }
 
-        [ForeignKey("ProductID")]
-        public virtual Product? Product { get; set; }
-    }
+    public virtual Product? Product { get; set; }
 }

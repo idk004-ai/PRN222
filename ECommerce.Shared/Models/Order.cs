@@ -1,63 +1,49 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class Order
 {
-    [Table("Orders")]
-    public class Order
-    {
-        public Order()
-        {
-            OrderDetails = new HashSet<OrderDetail>();
-        }
+    public int OrderId { get; set; }
 
-        [Key]
-        public int OrderID { get; set; }
+    public int CustomerId { get; set; }
 
-        [Required]
-        public int CustomerID { get; set; }
+    public int? PaymentId { get; set; }
 
-        public int? PaymentID { get; set; }
+    public int? ShippingId { get; set; }
 
-        public int? ShippingID { get; set; }
+    public int? Discount { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? Discount { get; set; }
+    public int? Taxes { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? Taxes { get; set; }
+    public int? TotalAmount { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? TotalAmount { get; set; }
+    public bool? IsCompleted { get; set; }
 
-        public DateTime? OrderDate { get; set; }
+    public DateTime? OrderDate { get; set; }
 
-        public bool? IsDispatched { get; set; }
+    public bool? Dispatched { get; set; }
 
-        public DateTime? DispatchedDate { get; set; }
+    public DateTime? DispatchedDate { get; set; }
 
-        public bool? Shipped { get; set; }
+    public bool? Shipped { get; set; }
 
-        public DateTime? ShippingDate { get; set; }
+    public DateTime? ShippingDate { get; set; }
 
-        public bool? Delivered { get; set; }
+    public bool? Deliver { get; set; }
 
-        public DateTime? DeliveryDate { get; set; }
+    public DateTime? DeliveryDate { get; set; }
 
-        public string? Notes { get; set; }
+    public string? Notes { get; set; }
 
-        public bool? CancelOrder { get; set; }
+    public bool? CancelOrder { get; set; }
 
-        // Navigation properties
-        [ForeignKey("CustomerID")]
-        public virtual Customer Customer { get; set; } = null!;
+    public virtual Customer Customer { get; set; } = null!;
 
-        [ForeignKey("PaymentID")]
-        public virtual Payment? Payment { get; set; }
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-        [ForeignKey("ShippingID")]
-        public virtual ShippingDetail? ShippingDetail { get; set; }
+    public virtual Payment? Payment { get; set; }
 
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-    }
+    public virtual ShippingDetail? Shipping { get; set; }
 }

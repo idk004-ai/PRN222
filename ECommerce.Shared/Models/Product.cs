@@ -1,103 +1,73 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class Product
 {
-    [Table("Products")]
-    public class Product
-    {
-        public Product()
-        {
-            OrderDetails = new HashSet<OrderDetail>();
-            Reviews = new HashSet<Review>();
-            Wishlists = new HashSet<Wishlist>();
-        }
+    public int ProductId { get; set; }
 
-        [Key]
-        public int ProductID { get; set; }
+    public string Name { get; set; } = null!;
 
-        [Required]
-        [StringLength(255)]
-        public string Name { get; set; } = string.Empty;
+    public int SupplierId { get; set; }
 
-        [Required]
-        public int SupplierID { get; set; }
+    public int CategoryId { get; set; }
 
-        [Required]
-        public int CategoryID { get; set; }
+    public int? SubCategoryId { get; set; }
 
-        public int? SubCategoryID { get; set; }
+    public string? QuantityPerUnit { get; set; }
 
-        [StringLength(100)]
-        public string? QuantityPerUnit { get; set; }
+    public decimal UnitPrice { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal UnitPrice { get; set; }
+    public decimal? OldPrice { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? OldPrice { get; set; }
+    public string? UnitWeight { get; set; }
 
-        [StringLength(50)]
-        public string? UnitWeight { get; set; }
+    public string? Size { get; set; }
 
-        [StringLength(50)]
-        public string? Size { get; set; }
+    public decimal? Discount { get; set; }
 
-        [Column(TypeName = "decimal(5,2)")]
-        public decimal? Discount { get; set; }
+    public int? UnitInStock { get; set; }
 
-        public int? UnitInStock { get; set; }
+    public int? UnitOnOrder { get; set; }
 
-        public int? UnitOnOrder { get; set; }
+    public bool? ProductAvailable { get; set; }
 
-        public bool? ProductAvailable { get; set; }
+    public string? ImageUrl { get; set; }
 
-        [StringLength(500)]
-        public string? ImageURL { get; set; }
+    public string? AltText { get; set; }
 
-        [StringLength(255)]
-        public string? AltText { get; set; }
+    public bool? AddBadge { get; set; }
 
-        public bool? AddBadge { get; set; }
+    public string? OfferTitle { get; set; }
 
-        [StringLength(100)]
-        public string? OfferTitle { get; set; }
+    public string? OfferBadgeClass { get; set; }
 
-        [StringLength(50)]
-        public string? OfferBadgeClass { get; set; }
+    public string? ShortDescription { get; set; }
 
-        [StringLength(1000)]
-        public string? ShortDescription { get; set; }
+    public string? LongDescription { get; set; }
 
-        public string? LongDescription { get; set; }
+    public string? Picture1 { get; set; }
 
-        [StringLength(500)]
-        public string? Picture1 { get; set; }
+    public string? Picture2 { get; set; }
 
-        [StringLength(500)]
-        public string? Picture2 { get; set; }
+    public string? Picture3 { get; set; }
 
-        [StringLength(500)]
-        public string? Picture3 { get; set; }
+    public string? Picture4 { get; set; }
 
-        [StringLength(500)]
-        public string? Picture4 { get; set; }
+    public string? Note { get; set; }
 
-        public string? Note { get; set; }
+    public virtual Category Category { get; set; } = null!;
 
-        // Navigation properties
-        [ForeignKey("CategoryID")]
-        public virtual Category Category { get; set; } = null!;
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-        [ForeignKey("SubCategoryID")]
-        public virtual SubCategory? SubCategory { get; set; }
+    public virtual ICollection<RecentlyView> RecentlyViews { get; set; } = new List<RecentlyView>();
 
-        [ForeignKey("SupplierID")]
-        public virtual Supplier Supplier { get; set; } = null!;
+    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<Review> Reviews { get; set; }
-        public virtual ICollection<Wishlist> Wishlists { get; set; }
-    }
+    public virtual SubCategory? SubCategory { get; set; }
+
+    public virtual Supplier Supplier { get; set; } = null!;
+
+    public virtual ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
 }

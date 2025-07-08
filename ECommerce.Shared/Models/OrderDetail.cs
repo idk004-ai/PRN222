@@ -1,38 +1,27 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class OrderDetail
 {
-    [Table("OrderDetails")]
-    public class OrderDetail
-    {
-        [Key]
-        public int OrderDetailsID { get; set; }
+    public int OrderDetailsId { get; set; }
 
-        [Required]
-        public int OrderID { get; set; }
+    public int OrderId { get; set; }
 
-        [Required]
-        public int ProductID { get; set; }
+    public int ProductId { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? UnitPrice { get; set; }
+    public decimal? UnitPrice { get; set; }
 
-        public int? Quantity { get; set; }
+    public int? Quantity { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? Discount { get; set; }
+    public decimal? Discount { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
-        public DateTime? OrderDate { get; set; }
+    public DateTime? OrderDate { get; set; }
 
-        // Navigation properties
-        [ForeignKey("OrderID")]
-        public virtual Order Order { get; set; } = null!;
+    public virtual Order Order { get; set; } = null!;
 
-        [ForeignKey("ProductID")]
-        public virtual Product Product { get; set; } = null!;
-    }
+    public virtual Product Product { get; set; } = null!;
 }

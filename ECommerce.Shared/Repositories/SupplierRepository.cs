@@ -1,4 +1,3 @@
-using ECommerce.Shared.Data;
 using ECommerce.Shared.IRepositories;
 using ECommerce.Shared.Models;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +6,7 @@ namespace ECommerce.Shared.Repositories
 {
     public class SupplierRepository : GenericRepository<Supplier>, ISupplierRepository
     {
-        public SupplierRepository(ECommerceDbContext context) : base(context)
+        public SupplierRepository(KahreedoContext context) : base(context)
         {
         }
 

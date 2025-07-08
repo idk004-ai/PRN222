@@ -1,53 +1,27 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class ShippingDetail
 {
-    [Table("ShippingDetails")]
-    public class ShippingDetail
-    {
-        public ShippingDetail()
-        {
-            Orders = new HashSet<Order>();
-        }
+    public int ShippingId { get; set; }
 
-        [Key]
-        public int ShippingID { get; set; }
+    public string FirstName { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string LastName { get; set; } = string.Empty;
+    public string Email { get; set; } = null!;
 
-        [Required]
-        [StringLength(255)]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+    public string Mobile { get; set; } = null!;
 
-        [Required]
-        [StringLength(20)]
-        public string Mobile { get; set; } = string.Empty;
+    public string Address { get; set; } = null!;
 
-        [Required]
-        [StringLength(500)]
-        public string Address { get; set; } = string.Empty;
+    public string? Province { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string Province { get; set; } = string.Empty;
+    public string? City { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string City { get; set; } = string.Empty;
+    public string? PostCode { get; set; }
 
-        [Required]
-        [StringLength(20)]
-        public string PostCode { get; set; } = string.Empty;
-
-        // Navigation properties
-        public virtual ICollection<Order> Orders { get; set; }
-    }
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

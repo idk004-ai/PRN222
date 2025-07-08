@@ -1,18 +1,18 @@
 using System.Linq.Expressions;
 using ECommerce.Shared.Common.Exceptions;
-using ECommerce.Shared.Data;
 using ECommerce.Shared.DTOs.Common;
 using ECommerce.Shared.IRepositories;
+using ECommerce.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Shared.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly ECommerceDbContext _context;
+        protected readonly KahreedoContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public GenericRepository(ECommerceDbContext context)
+        public GenericRepository(KahreedoContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
