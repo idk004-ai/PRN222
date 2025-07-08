@@ -141,9 +141,14 @@ namespace ECommerce.API.Controllers
         public async Task<ActionResult<UpdateProductDto>> GetProductForEdit(int id)
         {
             var updateModel = await _productService.GetProductForEditAsync(id);
+
             if (updateModel == null)
             {
                 return NotFound(new { message = ProductConstant.PRODUCT_NOT_FOUND });
+            }
+            else
+            {
+                Console.WriteLine($"############### EXISTED PRODUCT: {updateModel} #####################");
             }
 
             return Ok(updateModel);

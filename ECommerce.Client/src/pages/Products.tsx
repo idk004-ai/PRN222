@@ -4,19 +4,22 @@ import { Plus, Grid, List, Package } from 'lucide-react';
 import { ProductCard } from '../components/products/ProductCard';
 import { ProductFilters } from '../components/products/ProductFilters';
 import { AddProductModal } from '../components/products/AddProductModal';
+import { EditProductModal } from '../components/products/EditProductModal';
 import { Pagination } from '../components/common/Pagination';
 import { ToastContainer } from '../components/ui/Toast';
 
 import { productService } from '../services/productService';
 import { usePagination } from '../hooks/usePagination';
 import { useToast } from '../hooks/useToast';
-import type { Product, ProductFilter, CreateProductFormData } from '../types/product';
+import type { Product, ProductFilter, CreateProductFormData, UpdateProductFormData } from '../types/product';
 
 export const Products = () => {
     const [categories, setCategories] = useState<string[]>([]);
     const [filters, setFilters] = useState<ProductFilter>({});
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     // Toast notifications
     const { toasts, removeToast, success, error: showError } = useToast();
@@ -71,8 +74,31 @@ export const Products = () => {
     };
 
     const handleEditProduct = (product: Product) => {
-        console.log('Edit product:', product);
-        // TODO: Implement edit functionality
+        setSelectedProduct(product);
+        setIsEditModalOpen(true);
+    };
+
+    // Handle update product
+    const handleUpdateProduct = async (productData: UpdateProductFormData) => {
+        if (!selectedProduct) return;
+        
+        try {
+            const updatedProduct = await productService.updateProduct(selectedProduct.productId, productData);
+            if (updatedProduct) {
+                // Refresh current page to show updated product
+                refresh();
+                success('Product Updated', `"${updatedProduct.name}" has been successfully updated.`);
+                setIsEditModalOpen(false);
+                setSelectedProduct(null);
+            }
+        } catch (error: any) {
+            console.error('Error updating product:', error);
+            showError(
+                'Failed to Update Product',
+                error.response?.data?.message || 'An unexpected error occurred. Please try again.'
+            );
+            throw error; // Re-throw to let modal handle validation errors
+        }
     };
 
     const handleDeleteProduct = async (product: Product) => {
@@ -229,6 +255,19 @@ export const Products = () => {
                     onClose={() => setIsAddModalOpen(false)}
                     onSubmit={handleAddProduct}
                 />
+
+                {/* Edit Product Modal */}
+                {selectedProduct && (
+                    <EditProductModal
+                        isOpen={isEditModalOpen}
+                        productId={selectedProduct.productId}
+                        onClose={() => {
+                            setIsEditModalOpen(false);
+                            setSelectedProduct(null);
+                        }}
+                        onSubmit={handleUpdateProduct}
+                    />
+                )}
             </div>
 
             {/* Toast Notifications */}

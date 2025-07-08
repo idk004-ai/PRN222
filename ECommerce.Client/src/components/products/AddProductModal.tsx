@@ -28,37 +28,37 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
     resolver: zodResolver(productSchema) as Resolver<ProductFormSchema>,
     mode: 'onBlur', // Validate on blur to show immediate feedback
     defaultValues: {
-      Name: '',
-      SupplierID: 0,
-      CategoryID: 0,
-      SubCategoryID: undefined,
-      QuantityPerUnit: '',
-      UnitPrice: 0,
-      OldPrice: undefined,
-      UnitWeight: '',
-      Size: '',
-      Discount: 0,
-      UnitInStock: 0,
-      UnitOnOrder: 0,
-      ProductAvailable: true,
-      AddBadge: false,
-      OfferTitle: '',
-      OfferBadgeClass: '',
-      ShortDescription: '',
-      LongDescription: '',
-      AltText: '',
-      Note: '',
-      ImageFile: null,
-      Picture1File: null,
-      Picture2File: null,
-      Picture3File: null,
-      Picture4File: null,
+      name: '',
+      supplierID: 0,
+      categoryID: 0,
+      subCategoryID: undefined,
+      quantityPerUnit: '',
+      unitPrice: 0,
+      oldPrice: undefined,
+      unitWeight: '',
+      size: '',
+      discount: 0,
+      unitInStock: 0,
+      unitOnOrder: 0,
+      productAvailable: true,
+      addBadge: false,
+      offerTitle: '',
+      offerBadgeClass: '',
+      shortDescription: '',
+      longDescription: '',
+      altText: '',
+      note: '',
+      imageFile: null,
+      picture1File: null,
+      picture2File: null,
+      picture3File: null,
+      picture4File: null,
     }
   });
 
   // Watch specific fields for conditional logic
-  const watchCategoryID = watch('CategoryID');
-  const watchAddBadge = watch('AddBadge');
+  const watchCategoryID = watch('categoryID');
+  const watchAddBadge = watch('addBadge');
 
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -85,7 +85,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
     } else {
       // Clear subcategories if no category selected
       setSubCategories([]);
-      setValue('SubCategoryID', undefined);
+      setValue('subCategoryID', undefined);
     }
   }, [watchCategoryID, setValue]);
 
@@ -111,7 +111,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
     setLoadingCategories(true);
     const loadCategoriesPromise = productService.getCategories()
       .then(categoriesData => {
-        console.log('Category data: ' , categoriesData)
+        console.log('Category data: ', categoriesData)
         setCategories(categoriesData);
       })
       .catch(error => {
@@ -170,37 +170,37 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
   const onFormSubmit = async (data: ProductFormSchema) => {
     try {
       setServerError(null);
-      
-      // Data is already in PascalCase format from schema, no conversion needed
-      const formData: CreateProductFormData = {
-        Name: data.Name,
-        SupplierID: data.SupplierID,
-        CategoryID: data.CategoryID,
-        SubCategoryID: data.SubCategoryID,
-        QuantityPerUnit: data.QuantityPerUnit,
-        UnitPrice: data.UnitPrice,
-        OldPrice: data.OldPrice,
-        UnitWeight: data.UnitWeight,
-        Size: data.Size,
-        Discount: data.Discount,
-        UnitInStock: data.UnitInStock,
-        UnitOnOrder: data.UnitOnOrder,
-        ProductAvailable: data.ProductAvailable,
-        AddBadge: data.AddBadge,
-        OfferTitle: data.OfferTitle,
-        OfferBadgeClass: data.OfferBadgeClass,
-        ShortDescription: data.ShortDescription,
-        LongDescription: data.LongDescription,
-        AltText: data.AltText,
-        Note: data.Note,
-        ImageFile: data.ImageFile,
-        Picture1File: data.Picture1File,
-        Picture2File: data.Picture2File,
-        Picture3File: data.Picture3File,
-        Picture4File: data.Picture4File,
-      };
 
-      await onSubmit(formData);
+      // Data is already in PascalCase format from schema, no conversion needed
+      // const formData: CreateProductFormData = {
+      //   name: data.Name,
+      //   supplierID: data.SupplierID,
+      //   categoryID: data.CategoryID,
+      //   subCategoryID: data.SubCategoryID,
+      //   quantityPerUnit: data.QuantityPerUnit,
+      //   unitPrice: data.UnitPrice,
+      //   oldPrice: data.OldPrice,
+      //   unitWeight: data.UnitWeight,
+      //   size: data.Size,
+      //   discount: data.Discount,
+      //   unitInStock: data.UnitInStock,
+      //   unitOnOrder: data.UnitOnOrder,
+      //   productAvailable: data.ProductAvailable,
+      //   addBadge: data.AddBadge,
+      //   offerTitle: data.OfferTitle,
+      //   offerBadgeClass: data.OfferBadgeClass,
+      //   shortDescription: data.ShortDescription,
+      //   longDescription: data.LongDescription,
+      //   altText: data.AltText,
+      //   note: data.Note,
+      //   imageFile: data.ImageFile,
+      //   picture1File: data.Picture1File,
+      //   picture2File: data.Picture2File,
+      //   picture3File: data.Picture3File,
+      //   picture4File: data.Picture4File,
+      // };
+
+      await onSubmit(data);
       onClose();
       resetForm();
     } catch (error: any) {
@@ -214,13 +214,13 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
     }
   };
 
-  const FileUploadField = ({ label, field, required = false }: { 
-    label: string; 
-    field: keyof ProductFormSchema; 
-    required?: boolean 
+  const FileUploadField = ({ label, field, required = false }: {
+    label: string;
+    field: keyof ProductFormSchema;
+    required?: boolean
   }) => {
     const fieldValue = watch(field);
-    
+
     return (
       <FormField label={label} required={required} error={errors[field]?.message?.toString()}>
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
@@ -246,8 +246,8 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
   // Helper function to get input className with validation state
   const getInputClassName = (fieldName: keyof ProductFormSchema, baseClassName: string = "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2") => {
     const hasError = errors[fieldName];
-    const errorClasses = hasError 
-      ? "border-red-300 focus:ring-red-500 focus:border-red-500" 
+    const errorClasses = hasError
+      ? "border-red-300 focus:ring-red-500 focus:border-red-500"
       : "border-gray-300 focus:ring-blue-500 focus:border-blue-500";
     return `${baseClassName} ${errorClasses}`;
   };
@@ -268,18 +268,18 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <h4 className="text-lg font-medium text-gray-900 mb-4">Basic Information</h4>
           </div>
 
-          <FormField label="Product Name" required error={errors.Name?.message}>
+          <FormField label="Product Name" required error={errors.name?.message}>
             <input
-              {...register('Name')}
+              {...register('name')}
               type="text"
-              className={getInputClassName('Name')}
+              className={getInputClassName('name')}
               placeholder="Enter product name"
             />
           </FormField>
 
-          <FormField label="Supplier" required error={errors.SupplierID?.message}>
+          <FormField label="Supplier" required error={errors.supplierID?.message}>
             <select
-              {...register('SupplierID', { valueAsNumber: true })}
+              {...register('supplierID', { valueAsNumber: true })}
               className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${loadingSuppliers ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               disabled={loadingSuppliers}
             >
@@ -294,9 +294,9 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             </select>
           </FormField>
 
-          <FormField label="Category" required error={errors.CategoryID?.message}>
+          <FormField label="Category" required error={errors.categoryID?.message}>
             <select
-              {...register('CategoryID', { valueAsNumber: true })}
+              {...register('categoryID', { valueAsNumber: true })}
               className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${loadingCategories ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               disabled={loadingCategories}
             >
@@ -311,9 +311,9 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             </select>
           </FormField>
 
-          <FormField label="Sub Category" error={errors.SubCategoryID?.message}>
+          <FormField label="Sub Category" error={errors.subCategoryID?.message}>
             <select
-              {...register('SubCategoryID', { 
+              {...register('subCategoryID', {
                 setValueAs: (value) => value === '0' || value === '' ? undefined : Number(value)
               })}
               className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${(!watchCategoryID || loadingSubCategories) ? 'bg-gray-50 cursor-not-allowed' : ''}`}
@@ -340,61 +340,61 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <h4 className="text-lg font-medium text-gray-900 mb-4 mt-6">Pricing & Stock</h4>
           </div>
 
-          <FormField label="Unit Price" required error={errors.UnitPrice?.message}>
+          <FormField label="Unit Price" required error={errors.unitPrice?.message}>
             <input
-              {...register('UnitPrice', { valueAsNumber: true })}
+              {...register('unitPrice', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              className={getInputClassName('UnitPrice')}
+              className={getInputClassName('unitPrice')}
               placeholder="0.00"
             />
           </FormField>
 
-          <FormField label="Old Price" error={errors.OldPrice?.message}>
+          <FormField label="Old Price" error={errors.oldPrice?.message}>
             <input
-              {...register('OldPrice', { 
+              {...register('oldPrice', {
                 setValueAs: (value) => value === '' ? undefined : Number(value)
               })}
               type="number"
               step="0.01"
-              className={getInputClassName('OldPrice')}
+              className={getInputClassName('oldPrice')}
               placeholder="0.00"
             />
           </FormField>
 
-          <FormField label="Discount (%)" error={errors.Discount?.message}>
+          <FormField label="Discount (%)" error={errors.discount?.message}>
             <input
-              {...register('Discount', { valueAsNumber: true })}
+              {...register('discount', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              className={getInputClassName('Discount')}
+              className={getInputClassName('discount')}
               placeholder="0"
             />
           </FormField>
 
-          <FormField label="Units in Stock" error={errors.UnitInStock?.message}>
+          <FormField label="Units in Stock" error={errors.unitInStock?.message}>
             <input
-              {...register('UnitInStock', { valueAsNumber: true })}
+              {...register('unitInStock', { valueAsNumber: true })}
               type="number"
-              className={getInputClassName('UnitInStock')}
+              className={getInputClassName('unitInStock')}
               placeholder="0"
             />
           </FormField>
 
-          <FormField label="Units on Order" error={errors.UnitOnOrder?.message}>
+          <FormField label="Units on Order" error={errors.unitOnOrder?.message}>
             <input
-              {...register('UnitOnOrder', { valueAsNumber: true })}
+              {...register('unitOnOrder', { valueAsNumber: true })}
               type="number"
-              className={getInputClassName('UnitOnOrder')}
+              className={getInputClassName('unitOnOrder')}
               placeholder="0"
             />
           </FormField>
 
-          <FormField label="Quantity per Unit" error={errors.QuantityPerUnit?.message}>
+          <FormField label="Quantity per Unit" error={errors.quantityPerUnit?.message}>
             <input
-              {...register('QuantityPerUnit')}
+              {...register('quantityPerUnit')}
               type="text"
-              className={getInputClassName('QuantityPerUnit')}
+              className={getInputClassName('quantityPerUnit')}
               placeholder="e.g., 10 boxes x 20 bags"
             />
           </FormField>
@@ -404,38 +404,38 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <h4 className="text-lg font-medium text-gray-900 mb-4 mt-6">Product Details</h4>
           </div>
 
-          <FormField label="Unit Weight" error={errors.UnitWeight?.message}>
+          <FormField label="Unit Weight" error={errors.unitWeight?.message}>
             <input
-              {...register('UnitWeight')}
+              {...register('unitWeight')}
               type="text"
-              className={getInputClassName('UnitWeight')}
+              className={getInputClassName('unitWeight')}
               placeholder="e.g., 2.5 kg"
             />
           </FormField>
 
-          <FormField label="Size" error={errors.Size?.message}>
+          <FormField label="Size" error={errors.size?.message}>
             <input
-              {...register('Size')}
+              {...register('size')}
               type="text"
-              className={getInputClassName('Size')}
+              className={getInputClassName('size')}
               placeholder="e.g., L, XL, 42"
             />
           </FormField>
 
-          <FormField label="Short Description" error={errors.ShortDescription?.message}>
+          <FormField label="Short Description" error={errors.shortDescription?.message}>
             <textarea
-              {...register('ShortDescription')}
+              {...register('shortDescription')}
               rows={3}
-              className={getInputClassName('ShortDescription')}
+              className={getInputClassName('shortDescription')}
               placeholder="Brief product description"
             />
           </FormField>
 
-          <FormField label="Long Description" error={errors.LongDescription?.message}>
+          <FormField label="Long Description" error={errors.longDescription?.message}>
             <textarea
-              {...register('LongDescription')}
+              {...register('longDescription')}
               rows={3}
-              className={getInputClassName('LongDescription')}
+              className={getInputClassName('longDescription')}
               placeholder="Detailed product description"
             />
           </FormField>
@@ -447,7 +447,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
 
           <div className="flex items-center">
             <input
-              {...register('AddBadge')}
+              {...register('addBadge')}
               type="checkbox"
               id="addBadge"
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
@@ -459,7 +459,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
 
           <div className="flex items-center">
             <input
-              {...register('ProductAvailable')}
+              {...register('productAvailable')}
               type="checkbox"
               id="productAvailable"
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
@@ -471,20 +471,20 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
 
           {watchAddBadge && (
             <>
-              <FormField label="Offer Title" error={errors.OfferTitle?.message}>
+              <FormField label="Offer Title" error={errors.offerTitle?.message}>
                 <input
-                  {...register('OfferTitle')}
+                  {...register('offerTitle')}
                   type="text"
-                  className={getInputClassName('OfferTitle')}
+                  className={getInputClassName('offerTitle')}
                   placeholder="e.g., HOT, NEW, SALE"
                 />
               </FormField>
 
-              <FormField label="Offer Badge Class" error={errors.OfferBadgeClass?.message}>
+              <FormField label="Offer Badge Class" error={errors.offerBadgeClass?.message}>
                 <input
-                  {...register('OfferBadgeClass')}
+                  {...register('offerBadgeClass')}
                   type="text"
-                  className={getInputClassName('OfferBadgeClass')}
+                  className={getInputClassName('offerBadgeClass')}
                   placeholder="CSS class for badge styling"
                 />
               </FormField>
@@ -496,25 +496,25 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <h4 className="text-lg font-medium text-gray-900 mb-4 mt-6">Product Images</h4>
           </div>
 
-          <FileUploadField label="Main Image" field="ImageFile" />
-          <FileUploadField label="Picture 1" field="Picture1File" />
-          <FileUploadField label="Picture 2" field="Picture2File" />
-          <FileUploadField label="Picture 3" field="Picture3File" />
+          <FileUploadField label="Main Image" field="imageFile" />
+          <FileUploadField label="Picture 1" field="picture1File" />
+          <FileUploadField label="Picture 2" field="picture2File" />
+          <FileUploadField label="Picture 3" field="picture3File" />
 
-          <FormField label="Alt Text" error={errors.AltText?.message}>
+          <FormField label="Alt Text" error={errors.altText?.message}>
             <input
-              {...register('AltText')}
+              {...register('altText')}
               type="text"
-              className={getInputClassName('AltText')}
+              className={getInputClassName('altText')}
               placeholder="Alternative text for images"
             />
           </FormField>
 
-          <FormField label="Note" error={errors.Note?.message}>
+          <FormField label="Note" error={errors.note?.message}>
             <textarea
-              {...register('Note')}
+              {...register('note')}
               rows={2}
-              className={getInputClassName('Note')}
+              className={getInputClassName('note')}
               placeholder="Additional notes"
             />
           </FormField>

@@ -99,33 +99,98 @@ export interface ProductFormData {
     picture4File?: File | null;
 }
 
-// New interface with PascalCase naming that matches backend DTO
+// Interface for creating product (camelCase to match backend)
 export interface CreateProductFormData {
-    Name: string;
-    SupplierID: number;
-    CategoryID: number;
-    SubCategoryID?: number;
-    QuantityPerUnit?: string;
-    UnitPrice: number;
-    OldPrice?: number;
-    UnitWeight?: string;
-    Size?: string;
-    Discount?: number;
-    UnitInStock?: number;
-    UnitOnOrder?: number;
-    ProductAvailable: boolean;
-    AddBadge: boolean;
-    OfferTitle?: string;
-    OfferBadgeClass?: string;
-    ShortDescription?: string;
-    LongDescription?: string;
-    AltText?: string;
-    Note?: string;
-    ImageFile?: File | null;
-    Picture1File?: File | null;
-    Picture2File?: File | null;
-    Picture3File?: File | null;
-    Picture4File?: File | null;
+    name: string;
+    supplierID: number;
+    categoryID: number;
+    subCategoryID?: number;
+    quantityPerUnit?: string;
+    unitPrice: number;
+    oldPrice?: number;
+    unitWeight?: string;
+    size?: string;
+    discount?: number;
+    unitInStock?: number;
+    unitOnOrder?: number;
+    productAvailable: boolean;
+    addBadge: boolean;
+    offerTitle?: string;
+    offerBadgeClass?: string;
+    shortDescription?: string;
+    longDescription?: string;
+    altText?: string;
+    note?: string;
+    imageFile?: File | null;
+    picture1File?: File | null;
+    picture2File?: File | null;
+    picture3File?: File | null;
+    picture4File?: File | null;
+}
+
+// Interface for updating product (camelCase to match backend)
+export interface UpdateProductFormData {
+    productID: number;
+    name: string;
+    supplierID: number;
+    categoryID: number;
+    subCategoryID?: number;
+    quantityPerUnit?: string;
+    unitPrice: number;
+    oldPrice?: number;
+    unitWeight?: string;
+    size?: string;
+    discount?: number;
+    unitInStock?: number;
+    unitOnOrder?: number;
+    productAvailable: boolean;
+    addBadge: boolean;
+    offerTitle?: string;
+    offerBadgeClass?: string;
+    shortDescription?: string;
+    longDescription?: string;
+    altText?: string;
+    note?: string;
+    imageFile?: File | null;
+    picture1File?: File | null;
+    picture2File?: File | null;
+    picture3File?: File | null;
+    picture4File?: File | null;
+}
+
+// Interface for API response from backend (camelCase naming)
+export interface UpdateProductResponseDto {
+    productID: number;
+    name: string;
+    supplierID: number;
+    categoryID: number;
+    subCategoryID?: number;
+    quantityPerUnit?: string;
+    unitPrice: number;
+    oldPrice?: number;
+    unitWeight?: string;
+    size?: string;
+    discount?: number;
+    unitInStock?: number;
+    unitOnOrder?: number;
+    productAvailable: boolean;
+    addBadge: boolean;
+    offerTitle?: string;
+    offerBadgeClass?: string;
+    shortDescription?: string;
+    longDescription?: string;
+    altText?: string;
+    note?: string;
+    imageFile?: File | null;
+    picture1File?: File | null;
+    picture2File?: File | null;
+    picture3File?: File | null;
+    picture4File?: File | null;
+    imageURL?: string;
+    picture1?: string;
+    picture2?: string;
+    picture3?: string;
+    picture4?: string;
 }
 
 export interface Supplier {
