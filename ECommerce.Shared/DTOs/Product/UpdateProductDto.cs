@@ -78,5 +78,35 @@ namespace ECommerce.Shared.DTOs.Product
         public string? Picture2 { get; set; }
         public string? Picture3 { get; set; }
         public string? Picture4 { get; set; }
+
+        public override string ToString()
+        {
+            return $"Product ID: {ProductID}\n" +
+                   $"Name: {Name}\n" +
+                   $"Supplier ID: {SupplierID}\n" +
+                   $"Category ID: {CategoryID}\n" +
+                   $"SubCategory ID: {SubCategoryID}\n" +
+                   $"Quantity Per Unit: {QuantityPerUnit}\n" +
+                   $"Unit Price: {UnitPrice}\n" +
+                   $"Old Price: {OldPrice}\n" +
+                   $"Unit Weight: {UnitWeight}\n" +
+                   $"Size: {Size}\n" +
+                   $"Discount: {Discount}\n" +
+                   $"Units In Stock: {UnitInStock}\n" +
+                   $"Units On Order: {UnitOnOrder}\n" +
+                   $"Product Available: {ProductAvailable}\n" +
+                   $"Add Badge: {AddBadge}\n" +
+                   $"Offer Title: {OfferTitle}\n" +
+                   $"Offer Badge Class: {OfferBadgeClass}\n" +
+                   $"Short Description: {ShortDescription}\n" +
+                   $"Long Description: {LongDescription}\n" +
+                   $"Alt Text: {AltText}\n" +
+                   $"Note: {Note}\n" +
+                   $"Image URL: {ImageURL}\n" +
+                   $"Picture1: {Picture1}\n" +
+                   $"Picture2: {Picture2}\n" +
+                   $"Picture3: {Picture3}\n" +
+                   $"Picture4: {Picture4}";
+        }
     }
 }

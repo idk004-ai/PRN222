@@ -37,7 +37,7 @@ const getStockStatus = (product: Product) => {
 
 export const ProductCard = ({ product, onEdit, onDelete, onView }: ProductCardProps) => {
     const stockStatus = getStockStatus(product);
-    const imageUrl = productService.getPrimaryImageUrl(product);
+    // const imageUrl = productService.getPrimaryImageUrl(product);
     const hasDiscount = productService.hasDiscount(product);
     const discountPercentage = productService.getDiscountPercentage(product);
 

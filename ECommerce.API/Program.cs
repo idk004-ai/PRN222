@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Models;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
