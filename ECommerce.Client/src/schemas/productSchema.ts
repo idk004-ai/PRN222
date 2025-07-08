@@ -45,19 +45,19 @@ export const productSchema = z.object({
   Discount: z
     .number()
     .min(0, 'Discount cannot be negative')
-    .max(100, 'Discount cannot exceed 100%')
+    .max(100, 'Discount must be between 0 and 100')
     .optional()
     .default(0),
   
   UnitInStock: z
     .number()
-    .min(0, 'Stock cannot be negative')
+    .min(0, 'Stock must be greater than or equal to 0')
     .optional()
     .default(0),
   
   UnitOnOrder: z
     .number()
-    .min(0, 'Units on order cannot be negative')
+    .min(0, 'Unit on order must be greater than or equal to 0')
     .optional()
     .default(0),
   
@@ -93,26 +93,46 @@ export const productSchema = z.object({
     .string()
     .optional(),
   
-  // File fields
+  // File fields - with basic validation
   ImageFile: z
     .any()
-    .optional(),
+    .optional()
+    .refine((file) => {
+      if (!file) return true; // Optional field
+      return file instanceof File && file.type.startsWith('image/');
+    }, 'Please select a valid image file'),
   
   Picture1File: z
     .any()
-    .optional(),
+    .optional()
+    .refine((file) => {
+      if (!file) return true; // Optional field
+      return file instanceof File && file.type.startsWith('image/');
+    }, 'Please select a valid image file'),
   
   Picture2File: z
     .any()
-    .optional(),
+    .optional()
+    .refine((file) => {
+      if (!file) return true; // Optional field
+      return file instanceof File && file.type.startsWith('image/');
+    }, 'Please select a valid image file'),
   
   Picture3File: z
     .any()
-    .optional(),
+    .optional()
+    .refine((file) => {
+      if (!file) return true; // Optional field
+      return file instanceof File && file.type.startsWith('image/');
+    }, 'Please select a valid image file'),
   
   Picture4File: z
     .any()
-    .optional(),
+    .optional()
+    .refine((file) => {
+      if (!file) return true; // Optional field
+      return file instanceof File && file.type.startsWith('image/');
+    }, 'Please select a valid image file'),
 });
 
 export type ProductFormSchema = z.infer<typeof productSchema>;

@@ -26,6 +26,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
     formState: { errors, isSubmitting }
   } = useForm<ProductFormSchema>({
     resolver: zodResolver(productSchema) as Resolver<ProductFormSchema>,
+    mode: 'onBlur', // Validate on blur to show immediate feedback
     defaultValues: {
       Name: '',
       SupplierID: 0,
@@ -242,6 +243,15 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
     );
   };
 
+  // Helper function to get input className with validation state
+  const getInputClassName = (fieldName: keyof ProductFormSchema, baseClassName: string = "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2") => {
+    const hasError = errors[fieldName];
+    const errorClasses = hasError 
+      ? "border-red-300 focus:ring-red-500 focus:border-red-500" 
+      : "border-gray-300 focus:ring-blue-500 focus:border-blue-500";
+    return `${baseClassName} ${errorClasses}`;
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Product" size="xl">
       <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
@@ -262,7 +272,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <input
               {...register('Name')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('Name')}
               placeholder="Enter product name"
             />
           </FormField>
@@ -301,7 +311,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             </select>
           </FormField>
 
-          <FormField label="Sub Category">
+          <FormField label="Sub Category" error={errors.SubCategoryID?.message}>
             <select
               {...register('SubCategoryID', { 
                 setValueAs: (value) => value === '0' || value === '' ? undefined : Number(value)
@@ -335,7 +345,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
               {...register('UnitPrice', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('UnitPrice')}
               placeholder="0.00"
             />
           </FormField>
@@ -347,7 +357,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
               })}
               type="number"
               step="0.01"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('OldPrice')}
               placeholder="0.00"
             />
           </FormField>
@@ -357,7 +367,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
               {...register('Discount', { valueAsNumber: true })}
               type="number"
               step="0.01"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('Discount')}
               placeholder="0"
             />
           </FormField>
@@ -366,7 +376,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <input
               {...register('UnitInStock', { valueAsNumber: true })}
               type="number"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('UnitInStock')}
               placeholder="0"
             />
           </FormField>
@@ -375,7 +385,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <input
               {...register('UnitOnOrder', { valueAsNumber: true })}
               type="number"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('UnitOnOrder')}
               placeholder="0"
             />
           </FormField>
@@ -384,7 +394,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <input
               {...register('QuantityPerUnit')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('QuantityPerUnit')}
               placeholder="e.g., 10 boxes x 20 bags"
             />
           </FormField>
@@ -398,7 +408,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <input
               {...register('UnitWeight')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('UnitWeight')}
               placeholder="e.g., 2.5 kg"
             />
           </FormField>
@@ -407,7 +417,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <input
               {...register('Size')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('Size')}
               placeholder="e.g., L, XL, 42"
             />
           </FormField>
@@ -416,7 +426,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <textarea
               {...register('ShortDescription')}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('ShortDescription')}
               placeholder="Brief product description"
             />
           </FormField>
@@ -425,7 +435,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <textarea
               {...register('LongDescription')}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('LongDescription')}
               placeholder="Detailed product description"
             />
           </FormField>
@@ -465,7 +475,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
                 <input
                   {...register('OfferTitle')}
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  className={getInputClassName('OfferTitle')}
                   placeholder="e.g., HOT, NEW, SALE"
                 />
               </FormField>
@@ -474,7 +484,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
                 <input
                   {...register('OfferBadgeClass')}
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  className={getInputClassName('OfferBadgeClass')}
                   placeholder="CSS class for badge styling"
                 />
               </FormField>
@@ -495,7 +505,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <input
               {...register('AltText')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('AltText')}
               placeholder="Alternative text for images"
             />
           </FormField>
@@ -504,7 +514,7 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
             <textarea
               {...register('Note')}
               rows={2}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className={getInputClassName('Note')}
               placeholder="Additional notes"
             />
           </FormField>
