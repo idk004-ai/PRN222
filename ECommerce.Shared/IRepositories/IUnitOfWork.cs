@@ -1,7 +1,9 @@
 namespace ECommerce.Shared.IRepositories
-{    public interface IUnitOfWork : IDisposable
+{
+    public interface IUnitOfWork : IDisposable
     {
         IProductRepository ProductRepository { get; }
+        IProductVariantRepository ProductVariantRepository { get; }
         ICategoryRepository CategoryRepository { get; }
         ISubCategoryRepository SubCategoryRepository { get; }
         ISupplierRepository SupplierRepository { get; }

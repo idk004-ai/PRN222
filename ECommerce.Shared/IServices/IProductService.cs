@@ -72,5 +72,20 @@ namespace ECommerce.Shared.IServices
         /// <param name="categoryId">Category ID to filter subcategories</param>
         /// <returns>Subcategories dropdown data</returns>
         Task<IEnumerable<object>> GetSubCategoriesByCategoryAsync(int categoryId);
+        
+        /// <summary>
+        /// Get all variants for a specific product
+        /// </summary>
+        /// <param name="productId">Product ID</param>
+        /// <returns>List of product variants</returns>
+        Task<IEnumerable<ProductVariantDto>> GetProductVariantsAsync(int productId);
+        
+        /// <summary>
+        /// Create a new variant for an existing product
+        /// </summary>
+        /// <param name="productId">Product ID</param>
+        /// <param name="variantDto">Variant creation data</param>
+        /// <returns>Created variant</returns>
+        Task<ProductVariantDto?> CreateProductVariantAsync(int productId, CreateProductVariantDto variantDto);
     }
 }

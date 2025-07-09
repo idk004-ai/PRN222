@@ -60,6 +60,13 @@ namespace ECommerce.Shared.DTOs.Product
 
         public string? Note { get; set; }
 
+        // Variant information for new variant creation
+        public string? VariantType { get; set; } // e.g., "Color", "Size", "Material"
+        public string? VariantValue { get; set; } // e.g., "Red", "Large", "Cotton"
+        public decimal? VariantAdditionalPrice { get; set; } = 0;
+        public int? VariantStockQuantity { get; set; }
+        public string? VariantSKU { get; set; }
+
         // File upload properties - these will be converted to URLs after upload
         public IFormFile? ImageFile { get; set; }
         public IFormFile? Picture1File { get; set; }

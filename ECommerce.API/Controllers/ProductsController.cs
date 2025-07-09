@@ -154,6 +154,41 @@ namespace ECommerce.API.Controllers
             return Ok(updateModel);
         }
 
+        /// <summary>
+        /// Get all variants for a specific product
+        /// </summary>
+        /// <param name="id">Product ID</param>
+        /// <returns>List of product variants</returns>
+        [HttpGet("{id}/variants")]
+        public async Task<ActionResult<IEnumerable<ProductVariantDto>>> GetProductVariants(int id)
+        {
+            var variants = await _productService.GetProductVariantsAsync(id);
+            return Ok(variants);
+        }
+
+        /// <summary>
+        /// Create a new variant for an existing product
+        /// </summary>
+        /// <param name="id">Product ID</param>
+        /// <param name="variantDto">Variant creation data</param>
+        /// <returns>Created variant</returns>
+        [HttpPost("{id}/variants")]
+        public async Task<ActionResult<ProductVariantDto>> CreateProductVariant(int id, [FromBody] CreateProductVariantDto variantDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _productService.CreateProductVariantAsync(id, variantDto);
+            if (result == null)
+            {
+                return NotFound(new { message = "Product not found" });
+            }
+
+            return CreatedAtAction(nameof(GetProductVariants), new { id }, result);
+        }
+
         #region File Upload Helper Methods
 
         /// <summary>
