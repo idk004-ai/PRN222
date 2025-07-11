@@ -57,6 +57,10 @@ public partial class Product
 
     public string? Note { get; set; }
 
+    public bool IsMainProduct { get; set; } = true;
+
+    public string? ProductGroup { get; set; }
+
     public virtual Category Category { get; set; } = null!;
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
@@ -70,4 +74,6 @@ public partial class Product
     public virtual Supplier Supplier { get; set; } = null!;
 
     public virtual ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
+
+    public virtual ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
 }

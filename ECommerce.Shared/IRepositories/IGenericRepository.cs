@@ -47,5 +47,12 @@ namespace ECommerce.Shared.IRepositories
         /// <param name="searchTerm">The search term to filter entities. If null or empty, returns total count of all entities.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the total count.</returns>
         Task<int> GetCountAsync(string? searchTerm = null);
+        
+        /// <summary>
+        /// Gets the first entity that matches the specified predicate, or null if no entity is found.
+        /// </summary>
+        /// <param name="predicate">The predicate to filter entities.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the first matching entity or null.</returns>
+        Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
     }
 }

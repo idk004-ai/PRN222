@@ -38,6 +38,17 @@ namespace ECommerce.Shared.Mappings
                 .ForMember(dest => dest.OrderDetails, opt => opt.Ignore())
                 .ForMember(dest => dest.Reviews, opt => opt.Ignore())
                 .ForMember(dest => dest.Wishlists, opt => opt.Ignore());
+
+            // ProductVariant mappings
+            CreateMap<ProductVariant, ProductVariantDto>();
+            CreateMap<CreateProductVariantDto, ProductVariant>()
+                .ForMember(dest => dest.VariantID, opt => opt.Ignore())
+                .ForMember(dest => dest.ProductID, opt => opt.Ignore())
+                .ForMember(dest => dest.VariantName, opt => opt.Ignore())
+                .ForMember(dest => dest.IsActive, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.ModifiedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.Product, opt => opt.Ignore());
         }
     }
 }

@@ -161,5 +161,10 @@ namespace ECommerce.Shared.Repositories
             // Override in specific repositories for proper sorting
             return query;
         }
+
+        public virtual async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate);
+        }
     }
 }
