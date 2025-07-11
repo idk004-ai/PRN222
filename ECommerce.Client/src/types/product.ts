@@ -241,3 +241,45 @@ export interface UpdateCategoryFormData {
     existingPicture1?: string;
     existingPicture2?: string;
 }
+
+// Product Variant related interfaces
+export interface ProductVariant {
+    variantID: number;
+    productID: number;
+    variantName: string;
+    variantType: string;
+    variantValue: string;
+    additionalPrice?: number;
+    stockQuantity?: number;
+    variantSKU?: string;
+    isActive: boolean;
+    createdDate: string;
+    modifiedDate?: string;
+    productName?: string;
+    basePrice: number;
+    totalPrice: number;
+}
+
+export interface CreateProductVariant {
+    productID: number;
+    variantName: string;
+    variantType: string;
+    variantValue: string;
+    additionalPrice?: number;
+    stockQuantity?: number;
+    variantSKU?: string;
+}
+
+export interface ProductWithVariants {
+    productID: number;
+    name: string;
+    unitPrice: number;
+    imageURL?: string;
+    shortDescription?: string;
+    productAvailable: boolean;
+    variants: ProductVariant[];
+}
+
+export interface ProductDetail extends Product {
+    variants?: ProductVariant[];
+}

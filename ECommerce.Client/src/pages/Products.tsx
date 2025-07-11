@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Grid, List, Package } from 'lucide-react';
 
 import { ProductCard } from '../components/products/ProductCard';
@@ -14,6 +15,7 @@ import { useToast } from '../hooks/useToast';
 import type { Product, ProductFilter, CreateProductFormData, UpdateProductFormData } from '../types/product';
 
 export const Products = () => {
+    const navigate = useNavigate();
     const [categories, setCategories] = useState<string[]>([]);
     const [filters, setFilters] = useState<ProductFilter>({});
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -119,8 +121,7 @@ export const Products = () => {
     };
 
     const handleViewProduct = (product: Product) => {
-        console.log('View product:', product);
-        // TODO: Implement view functionality (navigate to product detail page)
+        navigate(`/admin/products/${product.productId}`);
     };
 
     if (loading) {

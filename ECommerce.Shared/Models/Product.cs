@@ -57,7 +57,7 @@ public partial class Product
 
     public string? Note { get; set; }
 
-    public bool IsMainProduct { get; set; } = true;
+    public bool IsMainProduct { get; set; }
 
     public string? ProductGroup { get; set; }
 
