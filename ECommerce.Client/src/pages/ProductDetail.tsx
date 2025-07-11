@@ -4,8 +4,8 @@ import { ArrowLeft, ShoppingCart, Star, Package, Tag, Truck, Shield, Minus, Plus
 import { productService } from '../services/productService';
 import { useToast } from '../hooks/useToast';
 import { ToastContainer } from '../components/ui/Toast';
-import { ProductVariantList } from '../components/products/ProductVariantList';
-import type { ProductDetail as ProductDetailType, ProductVariant } from '../types/product';
+import { ProductVariantList, AddProductVariantModal } from '../components/products';
+import type { ProductDetail as ProductDetailType, ProductVariant, CreateProductVariant } from '../types/product';
 
 export const ProductDetail = () => {
     const { id } = useParams<{ id: string }>();
@@ -18,6 +18,7 @@ export const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isAddVariantModalOpen, setIsAddVariantModalOpen] = useState(false);
 
     useEffect(() => {
         if (id) {
@@ -68,6 +69,30 @@ export const ProductDetail = () => {
         
         const variantText = selectedVariant ? ` (${selectedVariant.variantValue})` : '';
         success('Added to Cart', `${product.name}${variantText} x${quantity} added to cart`);
+    };
+
+    // Handle create variant
+    const handleCreateVariant = async (variantData: CreateProductVariant) => {
+        if (!product) return;
+        
+        try {
+            const newVariant = await productService.createProductVariant(product.productId, variantData);
+            if (newVariant) {
+                // Add the new variant to the existing list immediately for better UX
+                setProduct(prev => prev ? {
+                    ...prev,
+                    variants: [...(prev.variants || []), newVariant]
+                } : null);
+                
+                // Auto-select the new variant
+                setSelectedVariant(newVariant);
+                
+                success('Variant Created', `New variant "${newVariant.variantValue}" has been added successfully.`);
+            }
+        } catch (error: any) {
+            console.error('Error creating variant:', error);
+            throw error; // Let the modal handle the error display
+        }
     };
 
     // const handleAddToWishlist = () => {
@@ -267,13 +292,40 @@ export const ProductDetail = () => {
                     </div>
 
                     {/* Variants */}
-                    {product.variants && product.variants.length > 0 && (
-                        <ProductVariantList
-                            variants={product.variants}
-                            selectedVariant={selectedVariant}
-                            onVariantSelect={handleVariantSelect}
-                        />
-                    )}
+                    <div className="space-y-3">
+                        {product.variants && product.variants.length > 0 ? (
+                            <>
+                                <div className="flex items-center justify-between">
+                                    <button
+                                        onClick={() => setIsAddVariantModalOpen(true)}
+                                        className="text-sm bg-blue-50 text-blue-600 px-3 py-1 rounded-md hover:bg-blue-100 transition-colors flex items-center space-x-1"
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                        <span>Add Variant</span>
+                                    </button>
+                                </div>
+                                <ProductVariantList
+                                    variants={product.variants}
+                                    selectedVariant={selectedVariant}
+                                    onVariantSelect={handleVariantSelect}
+                                />
+                            </>
+                        ) : (
+                            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
+                                <div className="flex items-center space-x-2">
+                                    <Package className="w-5 h-5 text-gray-400" />
+                                    <span className="text-gray-600">No variants available</span>
+                                </div>
+                                <button
+                                    onClick={() => setIsAddVariantModalOpen(true)}
+                                    className="text-sm bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-1"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    <span>Add First Variant</span>
+                                </button>
+                            </div>
+                        )}
+                    </div>
 
                     {/* Stock Status */}
                     <div className="flex items-center space-x-2">
@@ -396,6 +448,17 @@ export const ProductDetail = () => {
 
             {/* Toast notifications */}
             <ToastContainer toasts={toasts} onDismiss={removeToast} />
+
+            {/* Add Product Variant Modal */}
+            {product && (
+                <AddProductVariantModal
+                    isOpen={isAddVariantModalOpen}
+                    onClose={() => setIsAddVariantModalOpen(false)}
+                    onSubmit={handleCreateVariant}
+                    productId={product.productId}
+                    productName={product.name}
+                />
+            )}
         </div>
     );
 };
