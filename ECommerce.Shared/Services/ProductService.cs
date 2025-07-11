@@ -275,5 +275,29 @@ namespace ECommerce.Shared.Services
 
             return _mapper.Map<ProductVariantDto>(variant);
         }
+
+        /// <summary>
+        /// Get all distinct variant types used in the system
+        /// </summary>
+        /// <returns>List of variant types</returns>
+        public async Task<IEnumerable<string>> GetVariantTypesAsync()
+        {
+            // For now, return common variant types
+            // In the future, this could query database for used variant types
+            var commonTypes = new[] { 
+                "Color", 
+                "Size", 
+                "Material", 
+                "Style", 
+                "Pattern",
+                "Weight",
+                "Length",
+                "Width",
+                "Height",
+                "Capacity"
+            };
+
+            return await Task.FromResult(commonTypes.OrderBy(t => t));
+        }
     }
 }

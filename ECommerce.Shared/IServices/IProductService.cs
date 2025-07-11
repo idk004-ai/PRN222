@@ -87,5 +87,11 @@ namespace ECommerce.Shared.IServices
         /// <param name="variantDto">Variant creation data</param>
         /// <returns>Created variant</returns>
         Task<ProductVariantDto?> CreateProductVariantAsync(int productId, CreateProductVariantDto variantDto);
+        
+        /// <summary>
+        /// Get all distinct variant types used in the system
+        /// </summary>
+        /// <returns>List of variant types</returns>
+        Task<IEnumerable<string>> GetVariantTypesAsync();
     }
 }

@@ -185,6 +185,17 @@ namespace ECommerce.API.Controllers
             return CreatedAtAction(nameof(GetProductVariants), new { id }, result);
         }
 
+        /// <summary>
+        /// Get all available variant types
+        /// </summary>
+        /// <returns>List of variant types</returns>
+        [HttpGet("variants/types")]
+        public async Task<ActionResult<IEnumerable<string>>> GetVariantTypes()
+        {
+            var variantTypes = await _productService.GetVariantTypesAsync();
+            return Ok(variantTypes);
+        }
+
         #region File Upload Helper Methods
 
         /// <summary>
