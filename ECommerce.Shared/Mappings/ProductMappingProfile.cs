@@ -42,8 +42,8 @@ namespace ECommerce.Shared.Mappings
             // ProductVariant mappings
             CreateMap<ProductVariant, ProductVariantDto>();
             CreateMap<CreateProductVariantDto, ProductVariant>()
-                .ForMember(dest => dest.VariantID, opt => opt.Ignore())
-                .ForMember(dest => dest.ProductID, opt => opt.Ignore())
+                .ForMember(dest => dest.VariantId, opt => opt.Ignore())
+                .ForMember(dest => dest.ProductId, opt => opt.Ignore())
                 .ForMember(dest => dest.VariantName, opt => opt.Ignore())
                 .ForMember(dest => dest.IsActive, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())

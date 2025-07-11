@@ -37,7 +37,7 @@ const getStockStatus = (product: Product) => {
 
 export const ProductCard = ({ product, onEdit, onDelete, onView }: ProductCardProps) => {
     const stockStatus = getStockStatus(product);
-    // const imageUrl = productService.getPrimaryImageUrl(product);
+    // const imageUrl = product.imageUrl || product.picture1 || `https://via.placeholder.com/300x300/4F46E5/FFFFFF?text=${encodeURIComponent(product.name)}`;
     const hasDiscount = productService.hasDiscount(product);
     const discountPercentage = productService.getDiscountPercentage(product);
 

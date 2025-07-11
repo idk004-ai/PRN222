@@ -37,6 +37,8 @@ public partial class KahreedoContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
+    public virtual DbSet<ProductVariant> ProductVariants { get; set; }
+
     public virtual DbSet<RecentlyView> RecentlyViews { get; set; }
 
     public virtual DbSet<Review> Reviews { get; set; }
@@ -373,6 +375,8 @@ public partial class KahreedoContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
+            entity.HasIndex(e => e.ProductGroup, "IX_Products_ProductGroup");
+
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.AltText)
                 .HasMaxLength(50)
@@ -383,6 +387,7 @@ public partial class KahreedoContext : DbContext
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("ImageURL");
+            entity.Property(e => e.IsMainProduct).HasDefaultValue(true);
             entity.Property(e => e.LongDescription)
                 .HasMaxLength(2000)
                 .IsUnicode(false);
@@ -410,6 +415,9 @@ public partial class KahreedoContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Picture4)
                 .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.ProductGroup)
+                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.QuantityPerUnit)
                 .HasMaxLength(50)
@@ -440,6 +448,44 @@ public partial class KahreedoContext : DbContext
                 .HasForeignKey(d => d.SupplierId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Products_Suppliers");
+        });
+
+        modelBuilder.Entity<ProductVariant>(entity =>
+        {
+            entity.HasKey(e => e.VariantId);
+
+            entity.HasIndex(e => e.ProductId, "IX_ProductVariants_ProductID");
+
+            entity.HasIndex(e => e.VariantType, "IX_ProductVariants_VariantType");
+
+            entity.Property(e => e.VariantId).HasColumnName("VariantID");
+            entity.Property(e => e.AdditionalPrice)
+                .HasDefaultValue(0m)
+                .HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+            entity.Property(e => e.StockQuantity).HasDefaultValue(0);
+            entity.Property(e => e.VariantName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.VariantSku)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("VariantSKU");
+            entity.Property(e => e.VariantType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.VariantValue)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductVariants)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("FK_ProductVariants_Products");
         });
 
         modelBuilder.Entity<RecentlyView>(entity =>

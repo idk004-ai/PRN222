@@ -1,40 +1,31 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace ECommerce.Shared.Models
+namespace ECommerce.Shared.Models;
+
+public partial class ProductVariant
 {
-    public class ProductVariant
-    {
-        public int VariantID { get; set; }
+    public int VariantId { get; set; }
 
-        [Required]
-        public int ProductID { get; set; }
+    public int ProductId { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string VariantName { get; set; } = string.Empty;
+    public string VariantName { get; set; } = null!;
 
-        [Required]
-        [StringLength(50)]
-        public string VariantType { get; set; } = string.Empty;
+    public string VariantType { get; set; } = null!;
 
-        [Required]
-        [StringLength(200)]
-        public string VariantValue { get; set; } = string.Empty;
+    public string VariantValue { get; set; } = null!;
 
-        public decimal? AdditionalPrice { get; set; } = 0;
+    public decimal? AdditionalPrice { get; set; }
 
-        public int? StockQuantity { get; set; } = 0;
+    public int? StockQuantity { get; set; }
 
-        [StringLength(50)]
-        public string? VariantSKU { get; set; }
+    public string? VariantSku { get; set; }
 
-        public bool IsActive { get; set; } = true;
+    public bool IsActive { get; set; }
 
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+    public DateTime CreatedDate { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
-        // Navigation property
-        public virtual Product? Product { get; set; }
-    }
+    public virtual Product Product { get; set; } = null!;
 }

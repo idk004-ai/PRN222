@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Product, ProductListResponse, ProductFilter, CreateProductFormData, UpdateProductFormData, Supplier, Category, SubCategory, LegacyProduct } from '../types/product';
+import type { Product, ProductListResponse, ProductFilter, CreateProductFormData, UpdateProductFormData, Supplier, Category, SubCategory, LegacyProduct, ProductVariant, ProductDetail } from '../types/product';
 import { categoryService } from './categoryService';
 
 const API_BASE_URL = import.meta.env.VITE_BASE_API || 'http://localhost:5214/api';
@@ -63,6 +63,37 @@ export const productService = {
             return response.data;
         } catch (error) {
             console.error('Error fetching product:', error);
+            return null;
+        }
+    },
+
+    // Get product variants
+    getProductVariants: async (productId: number): Promise<ProductVariant[]> => {
+        try {
+            const response = await api.get(`/products/${productId}/variants`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching product variants:', error);
+            return [];
+        }
+    },
+
+    // Get product with variants for detail page
+    getProductDetail: async (id: number): Promise<ProductDetail | null> => {
+        try {
+            const [product, variants] = await Promise.all([
+                productService.getProductById(id),
+                productService.getProductVariants(id)
+            ]);
+            
+            if (!product) return null;
+            
+            return {
+                ...product,
+                variants
+            };
+        } catch (error) {
+            console.error('Error fetching product detail:', error);
             return null;
         }
     },

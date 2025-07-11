@@ -61,7 +61,7 @@ namespace ECommerce.Shared.Services
             {
                 // Product exists and this is a variant - check if variant already exists
                 var existingVariant = await _unitOfWork.ProductVariantRepository
-                    .GetFirstOrDefaultAsync(v => v.ProductID == existingProduct.ProductId && 
+                    .GetFirstOrDefaultAsync(v => v.ProductId == existingProduct.ProductId && 
                                               v.VariantType.ToLower() == request.VariantType.ToLower() && 
                                               v.VariantValue.ToLower() == request.VariantValue.ToLower());
 
@@ -91,13 +91,13 @@ namespace ECommerce.Shared.Services
                 // Create new variant for existing product
                 var variant = new ProductVariant
                 {
-                    ProductID = existingProduct.ProductId,
+                    ProductId = existingProduct.ProductId,
                     VariantName = $"{request.VariantValue} {existingProduct.Name}",
                     VariantType = request.VariantType,
                     VariantValue = request.VariantValue,
                     AdditionalPrice = request.VariantAdditionalPrice ?? 0,
                     StockQuantity = request.VariantStockQuantity ?? request.UnitInStock ?? 0,
-                    VariantSKU = request.VariantSKU,
+                    VariantSku = request.VariantSKU,
                     IsActive = true,
                     CreatedDate = DateTime.Now
                 };
@@ -124,13 +124,13 @@ namespace ECommerce.Shared.Services
                 {
                     var variant = new ProductVariant
                     {
-                        ProductID = product.ProductId,
+                        ProductId = product.ProductId,
                         VariantName = $"{request.VariantValue} {product.Name}",
                         VariantType = request.VariantType,
                         VariantValue = request.VariantValue,
                         AdditionalPrice = request.VariantAdditionalPrice ?? 0,
                         StockQuantity = request.VariantStockQuantity ?? request.UnitInStock ?? 0,
-                        VariantSKU = request.VariantSKU,
+                        VariantSku = request.VariantSKU,
                         IsActive = true,
                         CreatedDate = DateTime.Now
                     };
@@ -226,7 +226,7 @@ namespace ECommerce.Shared.Services
 
             // Check if variant with same type and value already exists
             var existingVariant = await _unitOfWork.ProductVariantRepository
-                .GetFirstOrDefaultAsync(v => v.ProductID == productId && 
+                .GetFirstOrDefaultAsync(v => v.ProductId == productId && 
                                           v.VariantType == variantDto.VariantType && 
                                           v.VariantValue == variantDto.VariantValue);
             
@@ -259,13 +259,13 @@ namespace ECommerce.Shared.Services
             // Create new variant
             var variant = new ProductVariant
             {
-                ProductID = productId,
+                ProductId = productId,
                 VariantName = $"{variantDto.VariantValue} {product.Name}",
                 VariantType = variantDto.VariantType,
                 VariantValue = variantDto.VariantValue,
                 AdditionalPrice = variantDto.AdditionalPrice,
                 StockQuantity = variantDto.StockQuantity,
-                VariantSKU = variantDto.VariantSKU,
+                VariantSku = variantDto.VariantSKU,
                 IsActive = true,
                 CreatedDate = DateTime.Now
             };

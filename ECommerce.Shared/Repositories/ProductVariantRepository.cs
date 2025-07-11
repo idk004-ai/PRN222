@@ -18,13 +18,13 @@ namespace ECommerce.Shared.Repositories
         {
             return await _context.Set<ProductVariant>()
                 .Include(v => v.Product)
-                .FirstOrDefaultAsync(v => v.VariantID == id);
+                .FirstOrDefaultAsync(v => v.VariantId == id);
         }
 
         public async Task<IEnumerable<ProductVariant>> GetByProductIdAsync(int productId)
         {
             return await _context.Set<ProductVariant>()
-                .Where(v => v.ProductID == productId)
+                .Where(v => v.ProductId == productId)
                 .OrderBy(v => v.VariantType)
                 .ThenBy(v => v.VariantValue)
                 .ToListAsync();
@@ -33,7 +33,7 @@ namespace ECommerce.Shared.Repositories
         public async Task<IEnumerable<ProductVariant>> GetActiveByProductIdAsync(int productId)
         {
             return await _context.Set<ProductVariant>()
-                .Where(v => v.ProductID == productId && v.IsActive)
+                .Where(v => v.ProductId == productId && v.IsActive)
                 .OrderBy(v => v.VariantType)
                 .ThenBy(v => v.VariantValue)
                 .ToListAsync();
@@ -63,7 +63,7 @@ namespace ECommerce.Shared.Repositories
         public async Task<bool> ExistsAsync(int productId, string variantType, string variantValue)
         {
             return await _context.Set<ProductVariant>()
-                .AnyAsync(v => v.ProductID == productId 
+                .AnyAsync(v => v.ProductId == productId 
                           && v.VariantType.ToLower() == variantType.ToLower()
                           && v.VariantValue.ToLower() == variantValue.ToLower());
         }
@@ -71,7 +71,7 @@ namespace ECommerce.Shared.Repositories
         public async Task<IEnumerable<ProductVariant>> GetVariantsByProductIdAsync(int productId)
         {
             return await _context.Set<ProductVariant>()
-                .Where(v => v.ProductID == productId)
+                .Where(v => v.ProductId == productId)
                 .OrderBy(v => v.VariantType)
                 .ThenBy(v => v.VariantValue)
                 .ToListAsync();
