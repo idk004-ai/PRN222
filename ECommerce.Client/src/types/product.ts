@@ -221,3 +221,23 @@ export interface SubCategory {
     description?: string;
     isActive?: boolean;
 }
+
+// Category form data interfaces
+export interface CreateCategoryFormData {
+    name: string;
+    description?: string;
+    isActive: boolean;
+    picture1File?: File | null;
+    picture2File?: File | null;
+}
+
+export interface UpdateCategoryFormData {
+    categoryID: number;
+    name: string;
+    description?: string;
+    isActive: boolean;
+    picture1File?: File | null;
+    picture2File?: File | null;
+    existingPicture1?: string;
+    existingPicture2?: string;
+}
