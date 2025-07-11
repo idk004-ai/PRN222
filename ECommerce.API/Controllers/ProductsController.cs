@@ -74,7 +74,7 @@ namespace ECommerce.API.Controllers
         /// <param name="model">Product creation data</param>
         /// <returns>Created product</returns>
         [HttpPost]
-        public async Task<ActionResult<ProductResponseDto>> CreateProduct([FromForm] CreateProductDto model)
+        public async Task<ActionResult<ProductResponseDto>> CreateProduct([FromBody] CreateProductDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace ECommerce.API.Controllers
         /// <param name="model">Product update data</param>
         /// <returns>Updated product</returns>
         [HttpPut("{id}")]
-        public async Task<ActionResult<ProductResponseDto>> UpdateProduct(int id, [FromForm] UpdateProductDto model)
+        public async Task<ActionResult<ProductResponseDto>> UpdateProduct(int id, [FromBody] UpdateProductDto model)
         {
             if (id != model.ProductID)
             {
@@ -145,10 +145,6 @@ namespace ECommerce.API.Controllers
             if (updateModel == null)
             {
                 return NotFound(new { message = ProductConstant.PRODUCT_NOT_FOUND });
-            }
-            else
-            {
-                Console.WriteLine($"############### EXISTED PRODUCT: {updateModel} #####################");
             }
 
             return Ok(updateModel);

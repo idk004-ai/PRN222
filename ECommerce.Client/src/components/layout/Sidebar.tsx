@@ -8,7 +8,8 @@ import {
     Settings,
     LogOut,
     Menu,
-    X
+    X,
+    Grid3x3
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -20,6 +21,7 @@ const navigation = [
     { name: 'Dashboard', href: '/admin', icon: Home },
     { name: 'Orders', href: '/admin/orders', icon: ShoppingBag },
     { name: 'Products', href: '/admin/products', icon: Package },
+    { name: 'Categories', href: '/admin/categories', icon: Grid3x3 },
     { name: 'Customers', href: '/admin/customers', icon: Users },
     { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
     { name: 'Settings', href: '/admin/settings', icon: Settings },

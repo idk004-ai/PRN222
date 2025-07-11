@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { Product, ProductListResponse, ProductFilter, CreateProductFormData, UpdateProductFormData, Supplier, Category, SubCategory, LegacyProduct } from '../types/product';
+import { categoryService } from './categoryService';
 
 const API_BASE_URL = import.meta.env.VITE_BASE_API || 'http://localhost:5214/api';
 
@@ -98,85 +99,7 @@ export const productService = {
     // Create new product
     createProduct: async (productData: CreateProductFormData): Promise<Product | null> => {
         try {
-            const formData = new FormData();
-            
-            // Append form fields with camelCase names
-            formData.append('name', productData.name);
-            formData.append('supplierID', productData.supplierID.toString());
-            formData.append('categoryID', productData.categoryID.toString());
-            
-            if (productData.subCategoryID) {
-                formData.append('subCategoryID', productData.subCategoryID.toString());
-            }
-            if (productData.quantityPerUnit) {
-                formData.append('quantityPerUnit', productData.quantityPerUnit);
-            }
-            
-            formData.append('unitPrice', productData.unitPrice.toString());
-            
-            if (productData.oldPrice) {
-                formData.append('oldPrice', productData.oldPrice.toString());
-            }
-            if (productData.unitWeight) {
-                formData.append('unitWeight', productData.unitWeight);
-            }
-            if (productData.size) {
-                formData.append('size', productData.size);
-            }
-            if (productData.discount !== undefined) {
-                formData.append('discount', productData.discount.toString());
-            }
-            if (productData.unitInStock !== undefined) {
-                formData.append('unitInStock', productData.unitInStock.toString());
-            }
-            if (productData.unitOnOrder !== undefined) {
-                formData.append('unitOnOrder', productData.unitOnOrder.toString());
-            }
-            
-            formData.append('productAvailable', productData.productAvailable.toString());
-            formData.append('addBadge', productData.addBadge.toString());
-            
-            if (productData.offerTitle) {
-                formData.append('offerTitle', productData.offerTitle);
-            }
-            if (productData.offerBadgeClass) {
-                formData.append('offerBadgeClass', productData.offerBadgeClass);
-            }
-            if (productData.shortDescription) {
-                formData.append('shortDescription', productData.shortDescription);
-            }
-            if (productData.longDescription) {
-                formData.append('longDescription', productData.longDescription);
-            }
-            if (productData.altText) {
-                formData.append('altText', productData.altText);
-            }
-            if (productData.note) {
-                formData.append('note', productData.note);
-            }
-            
-            // Append files
-            if (productData.imageFile) {
-                formData.append('imageFile', productData.imageFile);
-            }
-            if (productData.picture1File) {
-                formData.append('picture1File', productData.picture1File);
-            }
-            if (productData.picture2File) {
-                formData.append('picture2File', productData.picture2File);
-            }
-            if (productData.picture3File) {
-                formData.append('picture3File', productData.picture3File);
-            }
-            if (productData.picture4File) {
-                formData.append('picture4File', productData.picture4File);
-            }
-
-            const response = await api.post('/products', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            const response = await api.post('/products', productData);
             return response.data;
         } catch (error) {
             console.error('Error creating product:', error);
@@ -187,86 +110,7 @@ export const productService = {
     // Update existing product
     updateProduct: async (id: number, productData: UpdateProductFormData): Promise<Product | null> => {
         try {
-            const formData = new FormData();
-            
-            // Append form fields with camelCase names
-            formData.append('productID', productData.productID.toString());
-            formData.append('name', productData.name);
-            formData.append('supplierID', productData.supplierID.toString());
-            formData.append('categoryID', productData.categoryID.toString());
-            
-            if (productData.subCategoryID) {
-                formData.append('subCategoryID', productData.subCategoryID.toString());
-            }
-            if (productData.quantityPerUnit) {
-                formData.append('quantityPerUnit', productData.quantityPerUnit);
-            }
-            
-            formData.append('unitPrice', productData.unitPrice.toString());
-            
-            if (productData.oldPrice) {
-                formData.append('oldPrice', productData.oldPrice.toString());
-            }
-            if (productData.unitWeight) {
-                formData.append('unitWeight', productData.unitWeight);
-            }
-            if (productData.size) {
-                formData.append('size', productData.size);
-            }
-            if (productData.discount !== undefined) {
-                formData.append('discount', productData.discount.toString());
-            }
-            if (productData.unitInStock !== undefined) {
-                formData.append('unitInStock', productData.unitInStock.toString());
-            }
-            if (productData.unitOnOrder !== undefined) {
-                formData.append('unitOnOrder', productData.unitOnOrder.toString());
-            }
-            
-            formData.append('productAvailable', productData.productAvailable.toString());
-            formData.append('addBadge', productData.addBadge.toString());
-            
-            if (productData.offerTitle) {
-                formData.append('offerTitle', productData.offerTitle);
-            }
-            if (productData.offerBadgeClass) {
-                formData.append('offerBadgeClass', productData.offerBadgeClass);
-            }
-            if (productData.shortDescription) {
-                formData.append('shortDescription', productData.shortDescription);
-            }
-            if (productData.longDescription) {
-                formData.append('longDescription', productData.longDescription);
-            }
-            if (productData.altText) {
-                formData.append('altText', productData.altText);
-            }
-            if (productData.note) {
-                formData.append('note', productData.note);
-            }
-            
-            // Append files
-            if (productData.imageFile) {
-                formData.append('imageFile', productData.imageFile);
-            }
-            if (productData.picture1File) {
-                formData.append('picture1File', productData.picture1File);
-            }
-            if (productData.picture2File) {
-                formData.append('picture2File', productData.picture2File);
-            }
-            if (productData.picture3File) {
-                formData.append('picture3File', productData.picture3File);
-            }
-            if (productData.picture4File) {
-                formData.append('picture4File', productData.picture4File);
-            }
-
-            const response = await api.put(`/products/${id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            const response = await api.put(`/products/${id}`, productData);
             return response.data;
         } catch (error) {
             console.error('Error updating product:', error);
@@ -318,8 +162,8 @@ export const productService = {
     // Get categories
     getCategories: async (): Promise<Category[]> => {
         try {
-            const response = await api.get('/categories');
-            return response.data;
+            // Use the dedicated categoryService
+            return await categoryService.getAllCategories();
         } catch (error) {
             console.error('Error fetching categories:', error);
             return [];
