@@ -38,6 +38,7 @@ namespace ECommerce.Shared.Common.Extensions
             // Register business logic services
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IAuthService, AuthService>();
             // services.AddScoped<ISupplierService, SupplierService>();
             // services.AddScoped<ISubCategoryService, SubCategoryService>();
 
