@@ -1,4 +1,5 @@
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search, User, LogOut } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 
 interface HeaderProps {
     title?: string;
@@ -6,6 +7,12 @@ interface HeaderProps {
 }
 
 export const Header = ({ title = 'Dashboard', className = '' }: HeaderProps) => {
+    const { user, logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+    };
+
     return (
         <header className={`bg-white shadow-sm border-b border-gray-200 ${className}`}>
             <div className="px-6 py-4">
@@ -38,12 +45,24 @@ export const Header = ({ title = 'Dashboard', className = '' }: HeaderProps) => 
                         </button>
 
                         {/* User menu */}
-                        <div className="relative">
-                            <button className="flex items-center space-x-2 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors">
+                        <div className="relative flex items-center space-x-2">
+                            <div className="flex items-center space-x-2 p-2 text-gray-600">
                                 <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
                                     <User className="w-4 h-4" />
                                 </div>
-                                <span className="hidden md:block text-sm font-medium">Admin</span>
+                                <span className="hidden md:block text-sm font-medium">
+                                    {user?.firstName} {user?.lastName}
+                                </span>
+                            </div>
+                            
+                            {/* Logout button */}
+                            <button
+                                onClick={handleLogout}
+                                className="flex items-center space-x-1 p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+                                title="Đăng xuất"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                <span className="hidden md:block text-sm font-medium">Đăng xuất</span>
                             </button>
                         </div>
                     </div>
