@@ -4,6 +4,8 @@ using ECommerce.Shared.DTOs.Product;
 using ECommerce.Shared.IRepositories;
 using ECommerce.Shared.IServices;
 using ECommerce.Shared.Models;
+using ECommerce.Shared.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Shared.Services
 {
