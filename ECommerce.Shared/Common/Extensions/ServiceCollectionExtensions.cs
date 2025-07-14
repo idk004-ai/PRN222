@@ -39,6 +39,7 @@ namespace ECommerce.Shared.Common.Extensions
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICustomerDashboardService, CustomerDashboardService>();
             // services.AddScoped<ISupplierService, SupplierService>();
             // services.AddScoped<ISubCategoryService, SubCategoryService>();
 

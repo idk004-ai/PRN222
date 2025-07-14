@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://localhost:7162/api';
+const API_BASE_URL = 'http://localhost:5214/api';
 
 export interface DashboardStats {
   totalOrders: number;
@@ -32,21 +32,27 @@ export interface DashboardData {
 }
 
 class CustomerDashboardService {
-    private getAuthToken(): string | null {
-        return localStorage.getItem('authToken');
-    }
-
-    private getAuthHeaders() {
-        const token = this.getAuthToken();
-        return token ? { Authorization: `Bearer ${token}` } : {};
+    private getCustomerId(): number | null {
+        const user = localStorage.getItem('user');
+        if (user) {
+            try {
+                const parsedUser = JSON.parse(user);
+                return parsedUser.id || null;
+            } catch {
+                return null;
+            }
+        }
+        return null;
     }
 
     async getDashboardData(): Promise<DashboardData> {
         try {
-            const response = await axios.get(`${API_BASE_URL}/customer/dashboard`, {
-                headers: this.getAuthHeaders()
-            });
+            const customerId = this.getCustomerId();
+            if (!customerId) {
+                throw new Error('Customer ID not found');
+            }
 
+            const response = await axios.get(`${API_BASE_URL}/CustomerDashboard/${customerId}/dashboard`);
             return response.data;
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
@@ -56,10 +62,12 @@ class CustomerDashboardService {
 
     async getStats(): Promise<DashboardStats> {
         try {
-            const response = await axios.get(`${API_BASE_URL}/customer/stats`, {
-                headers: this.getAuthHeaders()
-            });
+            const customerId = this.getCustomerId();
+            if (!customerId) {
+                throw new Error('Customer ID not found');
+            }
 
+            const response = await axios.get(`${API_BASE_URL}/CustomerDashboard/${customerId}/stats`);
             return response.data;
         } catch (error) {
             console.error('Error fetching stats:', error);
@@ -69,11 +77,12 @@ class CustomerDashboardService {
 
     async getRecentOrders(limit: number = 5): Promise<Order[]> {
         try {
-            const response = await axios.get(`${API_BASE_URL}/customer/orders/recent`, {
-                params: { limit },
-                headers: this.getAuthHeaders()
-            });
+            const customerId = this.getCustomerId();
+            if (!customerId) {
+                throw new Error('Customer ID not found');
+            }
 
+            const response = await axios.get(`${API_BASE_URL}/CustomerDashboard/${customerId}/recent-orders?limit=${limit}`);
             return response.data;
         } catch (error) {
             console.error('Error fetching recent orders:', error);
@@ -83,63 +92,17 @@ class CustomerDashboardService {
 
     async getProfile(): Promise<CustomerProfile> {
         try {
-            const response = await axios.get(`${API_BASE_URL}/customer/profile`, {
-                headers: this.getAuthHeaders()
-            });
+            const customerId = this.getCustomerId();
+            if (!customerId) {
+                throw new Error('Customer ID not found');
+            }
 
+            const response = await axios.get(`${API_BASE_URL}/CustomerDashboard/${customerId}/profile`);
             return response.data;
         } catch (error) {
             console.error('Error fetching profile:', error);
             throw error;
         }
-    }
-
-    // Mock data for development
-    getMockDashboardData(): DashboardData {
-        return {
-      stats: {
-        totalOrders: 12,
-        totalSpent: 2650000,
-        pendingOrders: 2
-      },
-            recentOrders: [
-                {
-                    orderId: 1001,
-                    orderDate: '2024-01-15',
-                    totalAmount: 450000,
-                    status: 'Delivered',
-                    itemCount: 3
-                },
-                {
-                    orderId: 1002,
-                    orderDate: '2024-01-20',
-                    totalAmount: 320000,
-                    status: 'Shipped',
-                    itemCount: 2
-                },
-                {
-                    orderId: 1003,
-                    orderDate: '2024-01-22',
-                    totalAmount: 180000,
-                    status: 'Processing',
-                    itemCount: 1
-                },
-                {
-                    orderId: 1004,
-                    orderDate: '2024-01-25',
-                    totalAmount: 650000,
-                    status: 'Pending',
-                    itemCount: 4
-                }
-            ],
-      profile: {
-        customerId: 1,
-        fullName: 'Nguyễn Văn An',
-        email: 'nguyenvanan@email.com',
-        joinDate: '2023-06-15',
-        totalOrders: 12
-      }
-        };
     }
 }
 

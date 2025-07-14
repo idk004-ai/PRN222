@@ -12,10 +12,8 @@ export const useDashboard = () => {
             setLoading(true);
             setError(null);
 
-            // For development, use mock data
-            // In production, uncomment the line below and remove mock data
-            // const data = await customerDashboardService.getDashboardData();
-            const data = customerDashboardService.getMockDashboardData();
+            // Use real API data
+            const data = await customerDashboardService.getDashboardData();
 
             setDashboardData(data);
         } catch (err) {
