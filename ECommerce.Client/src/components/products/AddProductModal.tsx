@@ -171,35 +171,6 @@ export const AddProductModal = ({ isOpen, onClose, onSubmit }: AddProductModalPr
     try {
       setServerError(null);
 
-      // Data is already in PascalCase format from schema, no conversion needed
-      // const formData: CreateProductFormData = {
-      //   name: data.Name,
-      //   supplierID: data.SupplierID,
-      //   categoryID: data.CategoryID,
-      //   subCategoryID: data.SubCategoryID,
-      //   quantityPerUnit: data.QuantityPerUnit,
-      //   unitPrice: data.UnitPrice,
-      //   oldPrice: data.OldPrice,
-      //   unitWeight: data.UnitWeight,
-      //   size: data.Size,
-      //   discount: data.Discount,
-      //   unitInStock: data.UnitInStock,
-      //   unitOnOrder: data.UnitOnOrder,
-      //   productAvailable: data.ProductAvailable,
-      //   addBadge: data.AddBadge,
-      //   offerTitle: data.OfferTitle,
-      //   offerBadgeClass: data.OfferBadgeClass,
-      //   shortDescription: data.ShortDescription,
-      //   longDescription: data.LongDescription,
-      //   altText: data.AltText,
-      //   note: data.Note,
-      //   imageFile: data.ImageFile,
-      //   picture1File: data.Picture1File,
-      //   picture2File: data.Picture2File,
-      //   picture3File: data.Picture3File,
-      //   picture4File: data.Picture4File,
-      // };
-
       await onSubmit(data);
       onClose();
       resetForm();

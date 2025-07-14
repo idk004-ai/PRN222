@@ -17,7 +17,8 @@ export const useUserDashboardData = () => {
                     // API trả về { data: [...], pageNumber, pageSize, ... }
                     const productsData = responseData.data || [];
                     console.log('Products Data:', productsData); // Debug log
-                    setProducts(productsData.slice(0, 12)); // Limit to 12 products
+                    // setProducts(productsData.slice(0, 12)); // Limit to 12 products
+                    setProducts(productsData);
                 } else {
                     console.error('Failed to fetch products:', productsResponse.status);
                 }

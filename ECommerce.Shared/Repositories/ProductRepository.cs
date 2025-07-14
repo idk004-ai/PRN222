@@ -2,6 +2,7 @@ using ECommerce.Shared.DTOs;
 using ECommerce.Shared.DTOs.Common;
 using ECommerce.Shared.IRepositories;
 using ECommerce.Shared.Models;
+using ECommerce.Shared.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Shared.Repositories
@@ -20,7 +21,8 @@ namespace ECommerce.Shared.Repositories
             IQueryable<Product> query = _dbSet
                 .Include(p => p.Category)
                 .Include(p => p.SubCategory)
-                .Include(p => p.Supplier);
+                .Include(p => p.Supplier)
+                .Include(p => p.ProductVariants);
 
             if (!string.IsNullOrEmpty(request.SearchTerm))
             {
