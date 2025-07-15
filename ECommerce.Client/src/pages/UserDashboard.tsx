@@ -1,6 +1,5 @@
 import React from 'react';
 import type { Product } from '../types/user';
-import { UserHeader } from '../components/layout/UserHeader';
 import { Banner } from '../components/ui/Banner';
 import { CustomerStats } from '../components/user/CustomerStats';
 import { RecentOrders } from '../components/user/RecentOrders';
@@ -22,7 +21,6 @@ export const UserDashboard: React.FC = () => {
     if (error) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <UserHeader />
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center">
                         <p className="text-red-600 mb-4">Có lỗi xảy ra: {error}</p>
@@ -40,7 +38,6 @@ export const UserDashboard: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <UserHeader />
             <SessionTimer />
 
             {banners.length > 0 && (
