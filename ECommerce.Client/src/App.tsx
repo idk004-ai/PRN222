@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth';
+import { CartProvider } from './hooks/useCart';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { AdminLayout } from './components/layout/AdminLayout';
 import { UserLayout } from './components/layout/UserLayout';
@@ -14,7 +15,8 @@ import { Cart } from './pages/Cart';
 const App = () => {
   return (
     <AuthProvider>
-      <Router>
+      <CartProvider>
+        <Router>
         <Routes>
           {/* Login route */}
           <Route path="/login" element={<Login />} />
@@ -62,6 +64,7 @@ const App = () => {
           <Route path="*" element={<div className="flex items-center justify-center h-screen"><div className="text-center"><h1 className="text-4xl font-bold text-gray-900">404</h1><p className="text-gray-600">Page not found</p></div></div>} />
         </Routes>
       </Router>
+      </CartProvider>
     </AuthProvider>
   );
 };

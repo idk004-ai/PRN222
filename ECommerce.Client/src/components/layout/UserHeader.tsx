@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useCart } from '../../hooks/useCart';
 import { User, ShoppingBag, ShoppingCart, Heart, Settings, LogOut, ChevronDown } from 'lucide-react';
 
 export const UserHeader: React.FC = () => {
     const { user, logout } = useAuth();
+    const { cart } = useCart();
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -45,10 +47,12 @@ export const UserHeader: React.FC = () => {
                             className="relative p-2 text-gray-600 hover:text-indigo-600 transition-colors"
                         >
                             <ShoppingCart className="w-6 h-6" />
-                            {/* Cart badge - you can add dynamic count here */}
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                                3
-                            </span>
+                            {/* Cart badge with dynamic count */}
+                            {cart.totalItems > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                    {cart.totalItems > 99 ? '99+' : cart.totalItems}
+                                </span>
+                            )}
                         </Link>
 
                         {/* User Menu */}

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Models;
+using ECommerce.API.Hubs;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddGlobalExceptionHandling();
+
+// Add SignalR
+builder.Services.AddSignalR();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
@@ -15,7 +20,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials();
+              .AllowCredentials(); // Important for SignalR
     });
 });
 
@@ -63,5 +68,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Map SignalR Hub
+app.MapHub<CartHub>("/cartHub");
 
 app.Run();

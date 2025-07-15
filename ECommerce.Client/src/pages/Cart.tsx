@@ -1,62 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ShoppingCart, ArrowLeft, Package } from 'lucide-react';
 import { CartItemComponent } from '../components/ui/CartItem';
 import { CartSummary } from '../components/ui/CartSummary';
 import { EmptyCart } from '../components/ui/EmptyCart';
 import { Button } from '../components/ui/Button';
-import type { CartItem, CartSummary as CartSummaryType } from '../types/cart';
+import { useCart } from '../hooks/useCart';
+import type { CartSummary as CartSummaryType } from '../types/cart';
 
 export const Cart: React.FC = () => {
-    // Mock data - trong thực tế sẽ lấy từ context hoặc API
-    const [cartItems, setCartItems] = useState<CartItem[]>([
-        {
-            productId: 1,
-            name: "Premium Wireless Headphones",
-            unitPrice: 299.99,
-            quantity: 1,
-            imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop",
-            altText: "Wireless headphones",
-            unitInStock: 15,
-            size: "One Size",
-            maxQuantity: 5
-        },
-        {
-            productId: 2,
-            name: "Smart Watch Series X",
-            unitPrice: 399.99,
-            quantity: 2,
-            imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop",
-            altText: "Smart watch",
-            unitInStock: 3,
-            size: "42mm",
-            maxQuantity: 3
-        },
-        {
-            productId: 3,
-            name: "Wireless Bluetooth Speaker",
-            unitPrice: 149.99,
-            quantity: 1,
-            imageUrl: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&h=300&fit=crop",
-            altText: "Bluetooth speaker",
-            unitInStock: 8,
-            maxQuantity: 10
-        }
-    ]);
-
-    const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+    const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
+    const [isCheckoutLoading, setIsCheckoutLoading] = React.useState(false);
 
     const handleUpdateQuantity = (productId: number, quantity: number) => {
-        setCartItems(items =>
-            items.map(item =>
-                item.productId === productId
-                    ? { ...item, quantity }
-                    : item
-            )
-        );
+        updateQuantity(productId, quantity);
     };
 
     const handleRemoveItem = (productId: number) => {
-        setCartItems(items => items.filter(item => item.productId !== productId));
+        removeFromCart(productId);
     };
 
     const handleCheckout = async () => {
@@ -74,7 +34,7 @@ export const Cart: React.FC = () => {
     };
 
     // Calculate cart summary
-    const subtotal = cartItems.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+    const subtotal = cart.totalAmount;
     const shipping = subtotal >= 50 ? 0 : 9.99; // Free shipping over $50
     const tax = subtotal * 0.08; // 8% tax
     const total = subtotal + shipping + tax;
@@ -86,9 +46,7 @@ export const Cart: React.FC = () => {
         total
     };
 
-    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
-    if (cartItems.length === 0) {
+    if (cart.items.length === 0) {
         return <EmptyCart onContinueShopping={handleContinueShopping} />;
     }
 
@@ -103,16 +61,14 @@ export const Cart: React.FC = () => {
                     >
                         <ArrowLeft size={20} className="mr-2" />
                         Continue Shopping
-                    </button>
-
-                    <div className="flex items-center gap-3">
+                    </button>            <div className="flex items-center gap-3">
                         <ShoppingCart size={32} className="text-indigo-600" />
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900">
                                 Shopping Cart
                             </h1>
                             <p className="text-gray-600">
-                                {totalItems} {totalItems === 1 ? 'item' : 'items'} in your cart
+                                {cart.totalItems} {cart.totalItems === 1 ? 'item' : 'items'} in your cart
                             </p>
                         </div>
                     </div>
@@ -122,7 +78,7 @@ export const Cart: React.FC = () => {
                     {/* Cart Items */}
                     <div className="lg:col-span-2">
                         <div className="space-y-4">
-                            {cartItems.map((item) => (
+                            {cart.items.map((item) => (
                                 <CartItemComponent
                                     key={item.productId}
                                     item={item}
@@ -143,7 +99,7 @@ export const Cart: React.FC = () => {
                             </Button>
 
                             <button
-                                onClick={() => setCartItems([])}
+                                onClick={() => clearCart()}
                                 className="flex-1 sm:flex-none px-4 py-2 text-red-600 hover:text-red-800 border border-red-300 hover:border-red-500 rounded-md transition-colors"
                             >
                                 Clear Cart
